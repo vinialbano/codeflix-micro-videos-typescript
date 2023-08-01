@@ -24,4 +24,8 @@ export abstract class ValueObject<T = any> {
     }
     return this._value.toString();
   }
+
+  toJSON() {
+    return this._value;
+  }
 }

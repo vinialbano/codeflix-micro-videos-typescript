@@ -39,7 +39,8 @@
 		"vscode": {
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh"
-			}
+			},
+			"extensions": ["firsttris.vscode-jest-runner"]
 		}	
 	}
 

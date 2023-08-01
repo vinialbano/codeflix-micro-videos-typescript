@@ -56,4 +56,22 @@ describe("ValueObject Unit Tests", () => {
       }
     );
   });
+
+  describe("toJSON() method", () => {
+    it.each([
+      [undefined, undefined],
+      [null, null],
+      [0, 0],
+      [1, 1],
+      ["", ""],
+      ["value", "value"],
+      [{ prop: "value" }, { prop: "value" }],
+    ])(
+      "should return the json representation of the value object",
+      (value: any, expected: any) => {
+        const vo = new StubValueObject(value);
+        expect(vo.toJSON()).toStrictEqual(expected);
+      }
+    );
+  });
 });
