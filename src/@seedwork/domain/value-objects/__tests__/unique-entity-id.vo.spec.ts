@@ -1,4 +1,4 @@
-import { InvalidUUIDError } from "../../../errors/invalid-uuid.error";
+import { InvalidUUIDError } from "../../errors/invalid-uuid.error";
 import { UniqueEntityID } from "../unique-entity-id.vo";
 
 describe("UniqueEntityID Unit Tests", () => {

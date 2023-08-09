@@ -1,7 +1,32 @@
-import { UniqueEntityID } from "../../../@seedwork/domain/value-objects/unique-entity-id.vo";
-import { Category, CategoryProperties } from "./category";
+import { UniqueEntityID } from "../../../../@seedwork/domain/value-objects/unique-entity-id.vo";
+import { Category, CategoryProperties } from "../category";
 describe("Category Tests", () => {
+  beforeEach(() => {
+    Category.validate = jest.fn();
+  });
   describe("Constructor of Category", () => {
+    it("should validate the properties", () => {
+      const props: CategoryProperties = {
+        name: "Movie",
+        description: "A story in a sequence of images and sounds.",
+        isActive: true,
+        createdAt: new Date(),
+      };
+      expect(() => new Category(props)).not.toThrow();
+      expect(Category.validate).toHaveBeenCalledTimes(1);
+      expect(Category.validate).toHaveBeenCalledWith(props);
+    });
+
+    it("should throw if the properties are invalid", () => {
+      const props = {} as CategoryProperties;
+      (Category.validate as jest.Mock).mockImplementationOnce(() => {
+        throw new Error("Invalid properties");
+      });
+      expect(() => new Category(props)).toThrow();
+      expect(Category.validate).toHaveBeenCalledTimes(1);
+      expect(Category.validate).toHaveBeenCalledWith(props);
+    });
+
     it.each<CategoryProperties>([
       {
         name: "Movie",
@@ -88,6 +113,45 @@ describe("Category Tests", () => {
   });
 
   describe("update()", () => {
+    it("should validate the properties", () => {
+      const props: CategoryProperties = {
+        name: "Movie",
+        description: "A story in a sequence of images and sounds.",
+        isActive: true,
+        createdAt: new Date(),
+      };
+      const category = new Category(props);
+      const newName = "Series";
+      const newDescription = "A series of movies.";
+      category.update(newName, newDescription);
+      expect(Category.validate).toHaveBeenCalledTimes(2);
+      expect(Category.validate).toHaveBeenNthCalledWith(2, {
+        name: newName,
+        description: newDescription,
+      });
+    });
+
+    it("should throw if the properties are invalid", () => {
+      const props: CategoryProperties = {
+        name: "Movie",
+        description: "A story in a sequence of images and sounds.",
+        isActive: true,
+        createdAt: new Date(),
+      };
+      const category = new Category(props);
+      const newName = "Series";
+      const newDescription = "A series of movies.";
+      (Category.validate as jest.Mock).mockImplementationOnce(() => {
+        throw new Error("Invalid properties");
+      });
+      expect(() => category.update(newName, newDescription)).toThrow();
+      expect(Category.validate).toHaveBeenCalledTimes(2);
+      expect(Category.validate).toHaveBeenNthCalledWith(2, {
+        name: newName,
+        description: newDescription,
+      });
+    });
+
     it("should update the name and description", () => {
       const props: CategoryProperties = {
         name: "Movie",
