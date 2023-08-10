@@ -52,8 +52,6 @@ function matchesObject(actual: any, expected: any) {
   }
 }
 
-function success() {}
-
 expect.extend({
   toContainErrorMessages,
 });

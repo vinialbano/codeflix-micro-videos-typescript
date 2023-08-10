@@ -16,3 +16,13 @@ export class EntityValidationError extends Error {
     this.name = "EntityValidationError";
   }
 }
+
+export class RepositoryValidationError extends Error {
+  constructor(
+    public errors: ValidationErrors,
+    message: string = "Repository Validation Error"
+  ) {
+    super(message);
+    this.name = "RepositoryValidationError";
+  }
+}
