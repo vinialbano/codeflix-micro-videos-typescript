@@ -6,7 +6,9 @@
   "scripts": {
     "ts-node": "ts-node",
     "tsc": "tsc",
-    "test": "jest"
+    "tsc:check": "tsc --noEmit",
+    "test": "jest",
+    "test:cov": "jest --coverage"
   },
   "keywords": [],
   "author": "",
