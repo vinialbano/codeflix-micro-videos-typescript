@@ -1,17 +1,17 @@
-import { Entity } from "../entities/entity";
+import { Entity, EntityPropsKeys } from "../entities/entity";
 import { SearchParamsValidator } from "./search-params.validator";
 
 export type SortOrder = "asc" | "desc";
 
-export type SearchParamsProps<E extends Entity<any>, Filter = string> = {
+export type SearchParamsProps<E extends Entity, Filter = string> = {
   page?: number;
   limit?: number;
-  sort?: "id" | keyof E["props"] | null;
+  sort?: "id" | EntityPropsKeys<E> | null;
   order?: SortOrder | null;
   filter?: Filter | null;
 };
 
-export class SearchParams<E extends Entity<any>, Filter = string> {
+export class SearchParams<E extends Entity, Filter = string> {
   protected props: SearchParamsProps<E, Filter>;
 
   constructor(props: SearchParamsProps<E, Filter> = {}) {
@@ -25,10 +25,10 @@ export class SearchParams<E extends Entity<any>, Filter = string> {
     };
   }
 
-  static validate<E extends Entity<any>, Filter = string>(
+  static validate<E extends Entity, Filter = string>(
     props: SearchParamsProps<E, Filter>
   ): SearchParamsProps<E, Filter> {
-    const validator = new SearchParamsValidator();
+    const validator = new SearchParamsValidator<E, Filter>();
     validator.validate(props);
     return validator.validatedData;
   }
@@ -41,7 +41,7 @@ export class SearchParams<E extends Entity<any>, Filter = string> {
     return this.props.limit;
   }
 
-  get sort(): "id" | keyof E["props"] | null {
+  get sort(): "id" | EntityPropsKeys<E> | null {
     return this.props.sort;
   }
 

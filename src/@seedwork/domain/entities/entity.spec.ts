@@ -2,26 +2,27 @@ import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
 import { ValueObject } from "../value-objects/value-object";
 import { Entity } from "./entity";
 
-class StubValueObject extends ValueObject<any> {}
-class StubEntity extends Entity<{ [key: string]: any }> {}
+class StubValueObject extends ValueObject {}
+class StubEntity extends Entity {}
 
 describe("Entity Unit Tests", () => {
   describe("Constructor of Entity", () => {
     it.each([new UniqueEntityID(), null, undefined])(
       "should have a valid id",
       (id) => {
-        const entity = new StubEntity({ prop: "value" }, id);
-        expect((entity as any)._id).toBeInstanceOf(UniqueEntityID);
-        expect(entity.id).toBe((entity as any)._id.value);
+        const props = { prop: "value" };
+        const entity = new StubEntity(props, id);
+        expect(entity["_id"]).toBeInstanceOf(UniqueEntityID);
+        expect(entity.id).toBe(entity["_id"].value);
       }
     );
 
-    it("should have a valid props", () => {
+    it("should have valid props", () => {
       const props = {
         prop: "value",
       };
       const entity = new StubEntity(props);
-      expect((entity as any).props).toStrictEqual(props);
+      expect(entity["_props"]).toStrictEqual(props);
     });
   });
 

@@ -4,7 +4,7 @@ import { CategoryProperties } from "../entitites/category";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(255),
-  description: z.string().trim().optional(),
+  description: z.string().trim().optional().nullable(),
   isActive: z.boolean().optional(),
   createdAt: z.date().optional(),
 });

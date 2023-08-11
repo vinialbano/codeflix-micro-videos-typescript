@@ -7,6 +7,7 @@ function makeSchema<T>(c: new (...args: any[]) => T) {
   return z
     .object({
       items: z.array(z.instanceof(c)),
+      total: z.number().int().min(0),
       currentPage: z.number().int().min(1),
       limit: z.number().int().min(1),
       sort: z.string().trim().min(1).nullable(),
@@ -29,7 +30,7 @@ function makeSchema<T>(c: new (...args: any[]) => T) {
 }
 
 export class SearchResultValidator<
-  E extends Entity<any>,
+  E extends Entity,
   Filter = string
 > extends ZodValidator<SearchResultProps<E, Filter>> {
   constructor(itemsClass: new (...args: any[]) => E) {

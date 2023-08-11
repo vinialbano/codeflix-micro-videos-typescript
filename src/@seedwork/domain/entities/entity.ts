@@ -1,7 +1,12 @@
 import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
 import { ValueObject } from "../value-objects/value-object";
 
-export abstract class Entity<Props extends Record<string, any>> {
+export type EntityPropsKeys<E extends Entity> = Extract<
+  keyof E["props"],
+  string
+>;
+
+export abstract class Entity<Props extends Record<string, any> = any> {
   protected readonly _id: UniqueEntityID;
   protected readonly _props: Props;
 
@@ -20,8 +25,8 @@ export abstract class Entity<Props extends Record<string, any>> {
     };
   }
 
-  toJSON(): Required<{ id: string } & Props> {
-    const getProps = (object: Props): any => {
+  toJSON(): { id: string } & Record<keyof Props, any> {
+    const getProps = (object: unknown): unknown => {
       if (object instanceof ValueObject) {
         return object.toJSON();
       }
@@ -42,8 +47,8 @@ export abstract class Entity<Props extends Record<string, any>> {
 
     const props = getProps(this._props);
     return {
+      ...(props as Record<keyof Props, any>),
       id: this.id,
-      ...props,
     };
   }
 }

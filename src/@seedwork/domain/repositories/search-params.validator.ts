@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ZodValidator } from "../../../@seedwork/domain/validators/zod-validator";
+import { Entity } from "../entities/entity";
 import { SearchParamsProps } from "./search-params";
 
 const schema = z
@@ -30,12 +31,15 @@ const schema = z
     return true;
   });
 
-export class SearchParamsValidator extends ZodValidator<SearchParamsProps> {
+export class SearchParamsValidator<
+  E extends Entity,
+  Filter
+> extends ZodValidator<SearchParamsProps<E, Filter>> {
   constructor() {
     super(schema);
   }
 
-  validate(input: SearchParamsProps): boolean {
+  validate(input: SearchParamsProps<E, Filter>): boolean {
     return super.validate(input);
   }
 }

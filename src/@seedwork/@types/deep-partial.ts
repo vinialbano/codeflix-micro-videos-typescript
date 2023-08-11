@@ -9,5 +9,5 @@ export type DeepPartial<Thing> = Thing extends Function
 interface DeepPartialArray<Thing> extends Array<DeepPartial<Thing>> {}
 
 type DeepPartialObject<Thing> = {
-  [key in keyof Thing]?: DeepPartial<Thing[Key]>;
+  [Key in keyof Thing]?: DeepPartial<Thing[Key]>;
 };

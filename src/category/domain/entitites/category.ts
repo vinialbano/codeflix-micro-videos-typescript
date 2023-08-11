@@ -5,7 +5,7 @@ import { CategoryValidator } from "../validators/category.validator";
 
 export type CategoryProperties = {
   name: string;
-  description?: string;
+  description?: string | null;
   isActive?: boolean;
   createdAt?: Date;
 };
@@ -23,7 +23,7 @@ export class Category extends Entity<CategoryProperties> {
     return this._props.name;
   }
 
-  get description(): string {
+  get description(): string | null {
     return this._props.description;
   }
 
@@ -38,7 +38,7 @@ export class Category extends Entity<CategoryProperties> {
   update(name: string, description: string): void {
     Category.validate({ name, description });
     this._props.name = name;
-    this._props.description = description;
+    this._props.description = description ?? null;
   }
 
   static validate(props: CategoryProperties): void {

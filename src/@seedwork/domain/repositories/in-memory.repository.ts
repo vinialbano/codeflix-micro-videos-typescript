@@ -1,11 +1,11 @@
-import { Entity } from "../entities/entity";
+import { Entity, EntityPropsKeys } from "../entities/entity";
 import { NotFoundError } from "../errors/not-found.error";
 import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
 import { Repository, SearchableRepository } from "./repository.interface";
 import { SearchParams } from "./search-params";
 import { SearchResult } from "./search-result";
 
-export abstract class InMemoryRepository<E extends Entity<any>>
+export abstract class InMemoryRepository<E extends Entity>
   implements Repository<E>
 {
   items: E[] = [];
@@ -45,13 +45,13 @@ export abstract class InMemoryRepository<E extends Entity<any>>
 }
 
 export abstract class InMemorySearchableRepository<
-    E extends Entity<any>,
+    E extends Entity,
     Filter = string
   >
   extends InMemoryRepository<E>
   implements SearchableRepository<E, Filter>
 {
-  abstract sortableFields: Array<"id" | keyof E["props"]>;
+  abstract sortableFields: Array<"id" | EntityPropsKeys<E>>;
 
   constructor(protected readonly entityClass: new (...args: any[]) => E) {
     super();

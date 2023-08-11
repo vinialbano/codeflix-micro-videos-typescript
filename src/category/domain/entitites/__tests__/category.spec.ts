@@ -165,6 +165,12 @@ describe("Category Tests", () => {
       category.update(newName, newDescription);
       expect(category.name).toBe(newName);
       expect(category.description).toBe(newDescription);
+      category.update(newName, null);
+      expect(category.name).toBe(newName);
+      expect(category.description).toBeNull();
+      category.update(newName, undefined);
+      expect(category.name).toBe(newName);
+      expect(category.description).toBeNull();
     });
   });
 

@@ -1,12 +1,13 @@
+import { EntityPropsKeys } from "../../../@seedwork/domain/entities/entity";
 import { InMemorySearchableRepository } from "../../../@seedwork/domain/repositories/in-memory.repository";
-import { Category, CategoryProperties } from "../../domain/entitites/category";
+import { Category } from "../../domain/entitites/category";
 import { CategoryRepository } from "../../domain/repositories/category.repository";
 
 export class CategoryInMemoryRepository
   extends InMemorySearchableRepository<Category>
   implements CategoryRepository.Repository
 {
-  sortableFields: Array<"id" | keyof CategoryProperties> = [
+  sortableFields: Array<"id" | EntityPropsKeys<Category>> = [
     "name",
     "description",
     "createdAt",

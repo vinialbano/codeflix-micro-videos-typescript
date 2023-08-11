@@ -1,9 +1,9 @@
-import { Entity } from "../entities/entity";
+import { Entity, EntityPropsKeys } from "../entities/entity";
 import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
 import { SearchParams } from "./search-params";
 import { SearchResult } from "./search-result";
 
-export interface Repository<E extends Entity<any>> {
+export interface Repository<E extends Entity> {
   insert(entity: E): Promise<void>;
   findById(id: string | UniqueEntityID): Promise<E>;
   findAll(entity: E): Promise<E[]>;
@@ -12,11 +12,11 @@ export interface Repository<E extends Entity<any>> {
 }
 
 export interface SearchableRepository<
-  E extends Entity<any>,
+  E extends Entity,
   Filter = string,
   SearchInput = SearchParams<E, Filter>,
   SearchOutput = SearchResult<E, Filter>
 > extends Repository<E> {
-  sortableFields: Array<"id" | keyof E["props"]>;
+  sortableFields: Array<"id" | EntityPropsKeys<E>>;
   search(props: SearchInput): Promise<SearchOutput>;
 }

@@ -1,20 +1,20 @@
-import { Entity } from "../entities/entity";
+import { Entity, EntityPropsKeys } from "../entities/entity";
 import { RepositoryValidationError } from "../errors/validation-error";
 import { SearchResultValidator } from "./search-result.validator";
 
 export type SortOrder = "asc" | "desc";
 
-export type SearchResultProps<E extends Entity<any>, Filter = string> = {
+export type SearchResultProps<E extends Entity, Filter = string> = {
   items: E[];
   total: number;
   currentPage: number;
   limit: number;
-  sort: "id" | keyof E["props"] | null;
+  sort: "id" | EntityPropsKeys<E> | null;
   order: SortOrder | null;
   filter: Filter | null;
 };
 
-export class SearchResult<E extends Entity<any>, Filter = string> {
+export class SearchResult<E extends Entity, Filter = string> {
   protected props: SearchResultProps<E, Filter> & {
     lastPage: number;
   };
@@ -30,7 +30,7 @@ export class SearchResult<E extends Entity<any>, Filter = string> {
     };
   }
 
-  static validate<E extends Entity<any>, Filter = string>(
+  static validate<E extends Entity, Filter = string>(
     props: SearchResultProps<E, Filter>,
     itemsClass: new (...args: any[]) => E
   ): SearchResultProps<E, Filter> {
@@ -62,7 +62,7 @@ export class SearchResult<E extends Entity<any>, Filter = string> {
     return this.props.limit;
   }
 
-  get sort(): "id" | keyof E["props"] | null {
+  get sort(): "id" | EntityPropsKeys<E> | null {
     return this.props.sort;
   }
 
@@ -74,9 +74,11 @@ export class SearchResult<E extends Entity<any>, Filter = string> {
     return this.props.filter;
   }
 
-  toJSON(): Required<SearchResultProps<E, Filter> & { lastPage: number }> {
+  toJSON(): Omit<SearchResultProps<E, Filter>, "items"> & {
+    lastPage: number;
+  } & { items: Record<string, any>[] } {
     return {
-      items: this.items.map((item) => item.toJSON()),
+      items: this.items.map((item: E) => item.toJSON()),
       total: this.total,
       currentPage: this.currentPage,
       lastPage: this.lastPage,

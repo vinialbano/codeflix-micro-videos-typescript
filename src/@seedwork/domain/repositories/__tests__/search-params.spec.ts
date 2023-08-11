@@ -23,7 +23,7 @@ describe("SearchParams Unit Tests", () => {
     });
 
     it("should validate the properties and create the instance with the returned values", () => {
-      const props: SearchParamsProps = {
+      const props: SearchParamsProps<StubEntity> = {
         page: 2,
         limit: 20,
         sort: "prop",

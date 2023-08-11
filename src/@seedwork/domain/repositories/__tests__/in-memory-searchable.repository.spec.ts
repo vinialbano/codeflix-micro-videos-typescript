@@ -1,4 +1,4 @@
-import { Entity } from "../../entities/entity";
+import { Entity, EntityPropsKeys } from "../../entities/entity";
 
 import { InMemorySearchableRepository } from "../in-memory.repository";
 import { SearchParams } from "../search-params";
@@ -12,7 +12,7 @@ interface StubEntityProps {
 class StubEntity extends Entity<StubEntityProps> {}
 
 class StubRepository extends InMemorySearchableRepository<StubEntity> {
-  sortableFields: Array<keyof StubEntity["props"]> = ["name", "price"];
+  sortableFields: Array<EntityPropsKeys<StubEntity>> = ["name", "price"];
 
   protected async applyFilter(
     items: StubEntity[],

@@ -173,6 +173,10 @@ describe("Category Integration Tests", () => {
         name: "Series",
         description: "Series description",
       },
+      {
+        name: "Series",
+        description: null,
+      },
     ])(`should update a category`, ({ name, description }) => {
       const category = new Category({ name: "Movie" });
       expect(() => category.update(name, description)).not.toThrow();

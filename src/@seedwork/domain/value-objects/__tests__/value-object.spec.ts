@@ -1,6 +1,6 @@
 import { ValueObject } from "../value-object";
 
-class StubValueObject extends ValueObject {}
+class StubValueObject extends ValueObject<unknown> {}
 
 describe("ValueObject Unit Tests", () => {
   describe("Constructor of ValueObject", () => {
@@ -14,24 +14,25 @@ describe("ValueObject Unit Tests", () => {
     );
 
     it("should be immutable", () => {
-      const vo = new StubValueObject({
+      const props = {
         prop: "value",
         nested: {
           prop: "value",
         },
-      });
+      };
+      const vo = new StubValueObject(props) as ValueObject<typeof props>;
       expect(() => {
-        (vo as any)._value = "other value";
+        (vo as any)["_value"] = "other value";
       }).toThrow(
         "Cannot assign to read only property '_value' of object '[object Object]'"
       );
       expect(() => {
-        (vo as any)._value.prop = "other value";
+        vo["_value"].prop = "other value";
       }).toThrow(
         "Cannot assign to read only property 'prop' of object '#<Object>'"
       );
       expect(() => {
-        (vo as any)._value.nested.prop = "other value";
+        vo["_value"].nested.prop = "other value";
       }).toThrow(
         "Cannot assign to read only property 'prop' of object '#<Object>'"
       );
@@ -50,7 +51,7 @@ describe("ValueObject Unit Tests", () => {
       [new Date("2021-01-01"), "2021-01-01T00:00:00.000Z"],
     ])(
       "should return the string representation of the value object",
-      (value: any, expected: string) => {
+      (value: unknown, expected: string) => {
         const vo = new StubValueObject(value);
         expect(vo.toString()).toBe(expected);
       }
@@ -68,7 +69,7 @@ describe("ValueObject Unit Tests", () => {
       [{ prop: "value" }, { prop: "value" }],
     ])(
       "should return the json representation of the value object",
-      (value: any, expected: any) => {
+      <T>(value: T, expected: T) => {
         const vo = new StubValueObject(value);
         expect(vo.toJSON()).toStrictEqual(expected);
       }

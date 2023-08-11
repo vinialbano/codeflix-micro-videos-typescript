@@ -1,7 +1,7 @@
 import { Entity } from "../../entities/entity";
 import { SearchResult, SearchResultProps } from "../search-result";
 
-class StubEntity extends Entity<any> {}
+class StubEntity extends Entity {}
 
 describe("SearchResult Unit Tests", () => {
   beforeEach(() => {

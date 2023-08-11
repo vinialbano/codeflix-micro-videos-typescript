@@ -54,6 +54,51 @@ describe("SearchResult Integration Tests", () => {
       ).not.toContainErrorMessages({});
     });
 
+    it("should contain error if total validation fails", () => {
+      const arrange: any[] = [
+        {
+          given: undefined,
+          expected: { _errors: ["Required"] },
+        },
+        {
+          given: null,
+          expected: { _errors: ["Expected number, received null"] },
+        },
+        {
+          given: 1.5,
+          expected: { _errors: ["Expected integer, received float"] },
+        },
+        {
+          given: -1,
+          expected: { _errors: ["Number must be greater than or equal to 0"] },
+        },
+      ];
+      arrange.forEach(({ given, expected }) => {
+        expect(
+          () =>
+            new SearchResult<StubEntity>(
+              { ...validProps, total: given } as any,
+              StubEntity
+            )
+        ).toContainErrorMessages({
+          total: expected,
+        });
+      });
+    });
+
+    it("should not contain error if total validation passes", () => {
+      const arrange = [0, 1, 2];
+      arrange.forEach((given) => {
+        expect(
+          () =>
+            new SearchResult<StubEntity>(
+              { ...validProps, total: given } as any,
+              StubEntity
+            )
+        ).not.toContainErrorMessages({});
+      });
+    });
+
     it("should contain error if currentPage validation fails", () => {
       const arrange: any[] = [
         {
