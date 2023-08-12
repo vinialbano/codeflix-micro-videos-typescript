@@ -7,6 +7,9 @@ services:
       args:
         - NODE_ENV=development
     container_name: "micro-videos-typescript-app"
+    command: ".docker/start.sh"
+    ports:
+      - 3000:3000
 
     volumes:
       - .:/home/node/app

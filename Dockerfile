@@ -9,8 +9,10 @@ RUN mkdir -p /usr/share/man/man1 && \
     zsh \
     curl \
     wget \
-    fonts-powerline && \
-    npm i npm@latest -g
+    fonts-powerline \
+    procps
+
+RUN npm i -g npm@latest @nestjs/cli@10.1.11
 
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64
 
