@@ -1,6 +1,5 @@
-import { Entity } from "../../domain/entities/entity";
-import { SearchResult } from "../../domain/repositories/search-result";
-import { PaginationOutputMapper } from "./pagination-output.mapper";
+import { PaginationOutputMapper } from "#seedwork/application";
+import { Entity, SearchResult } from "#seedwork/domain";
 
 class StubEntity extends Entity<{}> {}
 
@@ -27,7 +26,7 @@ describe("PaginationOutputMapper", () => {
         total: 1,
         currentPage: 1,
         lastPage: 1,
-        limit: 1
+        limit: 1,
       });
       expect(toItemDTO).toHaveBeenCalledWith(entity);
     });

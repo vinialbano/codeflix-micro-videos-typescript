@@ -1,4 +1,4 @@
-import { Category, CategoryProperties } from "../category";
+import { Category, CategoryProperties } from "#category/domain";
 
 describe("Category Integration Tests", () => {
   describe("constructor()", () => {

@@ -4,4 +4,4 @@ tsconfig.tsbuildinfo
 .docker/zsh/history/.zsh_history
 __coverage
 .DS_Store
-```
+dist

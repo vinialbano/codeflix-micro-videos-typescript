@@ -1,5 +1,4 @@
-import { Entity } from "../../entities/entity";
-import { SearchParams, SearchParamsProps } from "../search-params";
+import { Entity, SearchParams, SearchParamsProps } from "#seedwork/domain";
 
 class StubEntity extends Entity<{ prop: string }> {
   get prop(): string {

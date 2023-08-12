@@ -1,5 +1,5 @@
+import { ZodValidator } from "#seedwork/domain";
 import { z } from "zod";
-import { ZodValidator } from "../zod-validator";
 
 class StubValidator extends ZodValidator<{
   name: string;

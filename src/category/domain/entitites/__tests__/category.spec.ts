@@ -1,5 +1,5 @@
-import { UniqueEntityID } from "../../../../@seedwork/domain/value-objects/unique-entity-id.vo";
-import { Category, CategoryProperties } from "../category";
+import { Category, CategoryProperties } from "#category/domain";
+import { UniqueEntityID } from "#seedwork/domain";
 describe("Category Tests", () => {
   beforeEach(() => {
     Category.validate = jest.fn();

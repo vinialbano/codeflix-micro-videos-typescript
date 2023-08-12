@@ -1,16 +1,17 @@
-import { PaginationOutputDTO } from "../../../@seedwork/application/dtos/pagination-output.dto";
-import { SearchInputDTO } from "../../../@seedwork/application/dtos/search-input.dto";
-import { PaginationOutputMapper } from "../../../@seedwork/application/mappers/pagination-output.mapper";
-import { UseCase } from "../../../@seedwork/application/use-case";
-import { EntityPropsKeys } from "../../../@seedwork/domain/entities/entity";
-import { Category } from "../../domain/entitites/category";
-import { CategoryRepository } from "../../domain/repositories/category.repository";
-import { CategoryOutput } from "./dtos/category-output.dto";
-import { CategoryOutputMapper } from "./mappers/category-output.mapper";
+import { Category, CategoryRepository } from "#category/domain";
+import {
+  PaginationOutputDTO,
+  PaginationOutputMapper,
+  SearchInputDTO,
+  UseCase,
+} from "#seedwork/application";
+import { EntityPropsKeys } from "#seedwork/domain";
+import { CategoryOutput } from "./dtos";
+import { CategoryOutputMapper } from "./mappers";
 
-export type Input = SearchInputDTO<"id" | EntityPropsKeys<Category>>;
+type Input = SearchInputDTO<"id" | EntityPropsKeys<Category>>;
 
-export type Output = PaginationOutputDTO<CategoryOutput>;
+type Output = PaginationOutputDTO<CategoryOutput>;
 
 export class ListCategoriesUseCase implements UseCase<Input, Output> {
   constructor(

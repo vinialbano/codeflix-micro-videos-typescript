@@ -1,5 +1,4 @@
-import { Entity } from "../../entities/entity";
-import { SearchResult, SearchResultProps } from "../search-result";
+import { Entity, SearchResult, SearchResultProps } from "#seedwork/domain";
 
 class StubEntity extends Entity<{ prop: string }> {}
 class WrongStubEntity extends Entity<{ prop: number }> {}

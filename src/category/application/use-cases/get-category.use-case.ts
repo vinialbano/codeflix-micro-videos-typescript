@@ -1,13 +1,13 @@
-import { UseCase } from "../../../@seedwork/application/use-case";
-import { CategoryRepository } from "../../domain/repositories/category.repository";
-import { CategoryOutput } from "./dtos/category-output.dto";
-import { CategoryOutputMapper } from "./mappers/category-output.mapper";
+import { CategoryRepository } from "#category/domain";
+import { UseCase } from "#seedwork/application";
+import { CategoryOutput } from "./dtos";
+import { CategoryOutputMapper } from "./mappers";
 
-export type Input = {
+type Input = {
   id: string;
 };
 
-export type Output = CategoryOutput;
+type Output = CategoryOutput;
 
 export class GetCategoryUseCase implements UseCase<Input, Output> {
   constructor(

@@ -1,6 +1,4 @@
-import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
-import { ValueObject } from "../value-objects/value-object";
-import { Entity } from "./entity";
+import { Entity, UniqueEntityID, ValueObject } from "#seedwork/domain";
 
 class StubValueObject extends ValueObject {}
 class StubEntity extends Entity {}

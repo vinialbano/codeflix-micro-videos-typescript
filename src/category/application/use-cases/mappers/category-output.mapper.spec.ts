@@ -1,5 +1,5 @@
-import { Category } from "../../../domain/entitites/category";
-import { CategoryOutputMapper } from "./category-output.mapper";
+import { CategoryOutputMapper } from "#category/application";
+import { Category } from "#category/domain";
 
 describe("CategoryOutputMapper Unit Tests", () => {
   describe("toDTO()", () => {

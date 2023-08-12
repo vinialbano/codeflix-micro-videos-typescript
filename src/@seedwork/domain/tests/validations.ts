@@ -1,8 +1,8 @@
+import { DeepPartial } from "#seedwork/@types/deep-partial";
 import { expect } from "@jest/globals";
 import type { MatcherFunction } from "expect";
-import { DeepPartial } from "../../@types/deep-partial";
-import { EntityValidationError } from "../errors/validation-error";
-import { ValidationErrors } from "../validators/validator.interface";
+import { EntityValidationError } from "../errors";
+import { ValidationErrors } from "../validators";
 
 const toContainErrorMessages: MatcherFunction<
   [errors: DeepPartial<ValidationErrors>]

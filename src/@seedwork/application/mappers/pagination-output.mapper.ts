@@ -1,6 +1,5 @@
-import { Entity } from "../../domain/entities/entity";
-import { SearchResult } from "../../domain/repositories/search-result";
-import { PaginationOutputDTO } from "../dtos/pagination-output.dto";
+import { PaginationOutputDTO } from "../dtos";
+import { Entity, SearchResult } from "#seedwork/domain";
 
 export class PaginationOutputMapper {
   static toDTO<Item extends Entity, ItemDTO>(

@@ -1,8 +1,8 @@
-import { Entity, EntityPropsKeys } from "../entities/entity";
-import { RepositoryValidationError } from "../errors/validation-error";
+import { Entity, EntityPropsKeys } from "../entities";
+import { RepositoryValidationError } from "../errors";
 import { SearchResultValidator } from "./search-result.validator";
 
-export type SortOrder = "asc" | "desc";
+type SortOrder = "asc" | "desc";
 
 export type SearchResultProps<E extends Entity, Filter = string> = {
   items: E[];

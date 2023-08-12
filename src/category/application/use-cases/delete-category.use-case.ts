@@ -1,11 +1,11 @@
-import { UseCase } from "../../../@seedwork/application/use-case";
-import { CategoryRepository } from "../../domain/repositories/category.repository";
+import { CategoryRepository } from "#category/domain";
+import { UseCase } from "#seedwork/application";
 
-export type Input = {
+type Input = {
   id: string;
 };
 
-export type Output = void;
+type Output = void;
 
 export class DeleteCategoryUseCase implements UseCase<Input, Output> {
   constructor(

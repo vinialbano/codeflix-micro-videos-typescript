@@ -1,5 +1,4 @@
-import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
-import { ValueObject } from "../value-objects/value-object";
+import { UniqueEntityID, ValueObject } from "../value-objects";
 
 export type EntityPropsKeys<E extends Entity> = Extract<
   keyof E["props"],

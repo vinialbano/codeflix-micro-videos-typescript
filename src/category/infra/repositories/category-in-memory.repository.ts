@@ -1,7 +1,8 @@
-import { EntityPropsKeys } from "../../../@seedwork/domain/entities/entity";
-import { InMemorySearchableRepository } from "../../../@seedwork/domain/repositories/in-memory.repository";
-import { Category } from "../../domain/entitites/category";
-import { CategoryRepository } from "../../domain/repositories/category.repository";
+import { Category, CategoryRepository } from "#category/domain";
+import {
+  EntityPropsKeys,
+  InMemorySearchableRepository,
+} from "#seedwork/domain";
 
 export class CategoryInMemoryRepository
   extends InMemorySearchableRepository<Category>

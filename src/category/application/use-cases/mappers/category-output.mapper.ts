@@ -1,5 +1,5 @@
-import { Category } from "../../../domain/entitites/category";
-import { CategoryOutput } from "../dtos/category-output.dto";
+import { Category } from "#category/domain";
+import { CategoryOutput } from "../dtos";
 
 export class CategoryOutputMapper {
   static toDTO(category: Category): CategoryOutput {

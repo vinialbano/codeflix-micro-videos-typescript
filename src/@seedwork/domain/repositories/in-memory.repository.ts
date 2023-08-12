@@ -1,6 +1,6 @@
-import { Entity, EntityPropsKeys } from "../entities/entity";
-import { NotFoundError } from "../errors/not-found.error";
-import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
+import { Entity, EntityPropsKeys } from "../entities";
+import { NotFoundError } from "../errors";
+import { UniqueEntityID } from "../value-objects";
 import { Repository, SearchableRepository } from "./repository.interface";
 import { SearchParams } from "./search-params";
 import { SearchResult } from "./search-result";

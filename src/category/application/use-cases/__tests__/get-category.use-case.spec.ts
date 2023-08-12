@@ -1,7 +1,7 @@
-import { NotFoundError } from "../../../../@seedwork/domain/errors/not-found.error";
-import { Category } from "../../../domain/entitites/category";
-import { CategoryInMemoryRepository } from "../../../infra/repositories/category-in-memory.repository";
-import { GetCategoryUseCase } from "../get-category.use-case";
+import { GetCategoryUseCase } from "#category/application";
+import { Category } from "#category/domain";
+import { CategoryInMemoryRepository } from "#category/infra";
+import { NotFoundError } from "#seedwork/domain";
 
 const makeSut = () => {
   const categoryRepository = new CategoryInMemoryRepository();

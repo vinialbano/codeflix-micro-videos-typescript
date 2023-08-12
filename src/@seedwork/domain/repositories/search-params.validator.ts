@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ZodValidator } from "../../../@seedwork/domain/validators/zod-validator";
-import { Entity } from "../entities/entity";
+import { Entity } from "../entities";
+import { ZodValidator } from "../validators";
 import { SearchParamsProps } from "./search-params";
 
 const schema = z

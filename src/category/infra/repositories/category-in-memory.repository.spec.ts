@@ -1,6 +1,5 @@
-import { Category } from "../../domain/entitites/category";
-import { CategoryRepository } from "../../domain/repositories/category.repository";
-import { CategoryInMemoryRepository } from "./category-in-memory.repository";
+import { Category, CategoryRepository } from "#category/domain";
+import { CategoryInMemoryRepository } from "#category/infra";
 
 const makeSut = () => {
   const sut = new CategoryInMemoryRepository();

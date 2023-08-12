@@ -1,4 +1,4 @@
-import { SortOrder } from "../../domain/repositories/search-params";
+type SortOrder = "asc" | "desc";
 
 export type SearchInputDTO<SortProps = string, Filter = string> = {
   page?: number;

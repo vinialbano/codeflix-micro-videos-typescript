@@ -1,8 +1,10 @@
-import { Entity, EntityPropsKeys } from "../../entities/entity";
-
-import { InMemorySearchableRepository } from "../in-memory.repository";
-import { SearchParams } from "../search-params";
-import { SearchResult } from "../search-result";
+import {
+  Entity,
+  EntityPropsKeys,
+  InMemorySearchableRepository,
+  SearchParams,
+  SearchResult,
+} from "#seedwork/domain";
 
 interface StubEntityProps {
   name: string;

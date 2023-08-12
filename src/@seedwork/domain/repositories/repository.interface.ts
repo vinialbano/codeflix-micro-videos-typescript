@@ -1,5 +1,5 @@
-import { Entity, EntityPropsKeys } from "../entities/entity";
-import { UniqueEntityID } from "../value-objects/unique-entity-id.vo";
+import { Entity, EntityPropsKeys } from "../entities";
+import { UniqueEntityID } from "../value-objects";
 import { SearchParams } from "./search-params";
 import { SearchResult } from "./search-result";
 

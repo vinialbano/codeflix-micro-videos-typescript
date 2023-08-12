@@ -1,4 +1,4 @@
-import { ValidationErrors } from "../validators/validator.interface";
+import { ValidationErrors } from "../validators";
 
 export class ValidationError extends Error {
   constructor(message: string = "Validation Error") {

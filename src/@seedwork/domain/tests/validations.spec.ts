@@ -1,5 +1,4 @@
-import { EntityValidationError } from "../errors/validation-error";
-import { ValidationErrors } from "../validators/validator.interface";
+import { EntityValidationError, ValidationErrors } from "#seedwork/domain";
 
 describe("Jest Custom Validations", () => {
   describe("toContainErrorMessages()", () => {

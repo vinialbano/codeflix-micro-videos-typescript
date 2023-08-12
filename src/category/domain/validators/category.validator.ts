@@ -1,6 +1,6 @@
+import { ZodValidator } from "#seedwork/domain";
 import { z } from "zod";
-import { ZodValidator } from "../../../@seedwork/domain/validators/zod-validator";
-import { CategoryProperties } from "../entitites/category";
+import { CategoryProperties } from "../entitites";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(255),

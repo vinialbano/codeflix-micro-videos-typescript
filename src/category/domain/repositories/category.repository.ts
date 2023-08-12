@@ -1,10 +1,10 @@
-import { SearchableRepository } from "../../../@seedwork/domain/repositories/repository.interface";
-import { SearchParams as DefaultSearchParams } from "../../../@seedwork/domain/repositories/search-params";
 import {
+  SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,
   SearchResultProps,
-} from "../../../@seedwork/domain/repositories/search-result";
-import { Category } from "../entitites/category";
+  SearchableRepository,
+} from "#seedwork/domain";
+import { Category } from "../entitites";
 
 export namespace CategoryRepository {
   export type Filter = string;

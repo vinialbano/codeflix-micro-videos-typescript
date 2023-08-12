@@ -1,6 +1,6 @@
-import { Category } from "../../../domain/entitites/category";
-import { CategoryInMemoryRepository } from "../../../infra/repositories/category-in-memory.repository";
-import { ListCategoriesUseCase } from "../list-categories.use-case";
+import { ListCategoriesUseCase } from "#category/application";
+import { Category } from "#category/domain";
+import { CategoryInMemoryRepository } from "#category/infra";
 
 const makeSut = () => {
   const categoryRepository = new CategoryInMemoryRepository();

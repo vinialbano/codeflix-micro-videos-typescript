@@ -1,5 +1,4 @@
-import { InvalidUUIDError } from "../../errors/invalid-uuid.error";
-import { UniqueEntityID } from "../unique-entity-id.vo";
+import { InvalidUUIDError, UniqueEntityID } from "#seedwork/domain";
 
 describe("UniqueEntityID Unit Tests", () => {
   describe("Constructor of UniqueEntityID", () => {

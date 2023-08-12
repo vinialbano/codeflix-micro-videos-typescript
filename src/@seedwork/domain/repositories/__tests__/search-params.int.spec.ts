@@ -1,4 +1,4 @@
-import { SearchParams } from "../search-params";
+import { SearchParams } from "#seedwork/domain";
 
 describe("SearchParams Integration Tests", () => {
   describe("constructor()", () => {

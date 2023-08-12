@@ -1,5 +1,5 @@
-import { CategoryInMemoryRepository } from "../../../infra/repositories/category-in-memory.repository";
-import { CreateCategoryUseCase } from "../create-category.use-case";
+import { CreateCategoryUseCase } from "#category/application";
+import { CategoryInMemoryRepository } from "#category/infra";
 
 const makeSut = () => {
   const categoryRepository = new CategoryInMemoryRepository();

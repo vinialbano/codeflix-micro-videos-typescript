@@ -1,4 +1,4 @@
-import { Entity, EntityPropsKeys } from "../entities/entity";
+import { Entity, EntityPropsKeys } from "../entities";
 import { SearchParamsValidator } from "./search-params.validator";
 
 export type SortOrder = "asc" | "desc";
