@@ -105,7 +105,7 @@ describe('SearchParams Integration Tests', () => {
         { given: false, expected: null },
         { given: {}, expected: null },
         { given: 'field', expected: 'field' },
-        { given: ' field ', expected: 'field' },
+        { given: ' field ', expected: ' field ' },
       ];
       arrange.forEach(({ given, expected }) => {
         const searchParams = new SearchParams({ filter: given });

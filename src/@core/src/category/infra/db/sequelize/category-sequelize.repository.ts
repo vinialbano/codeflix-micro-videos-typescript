@@ -52,8 +52,6 @@ export class CategorySequelizeRepository
   async search(
     props: CategoryRepository.SearchParams = new CategoryRepository.SearchParams(),
   ): Promise<CategoryRepository.SearchResult> {
-    console.log(this.sortableFields.includes(props.sort));
-
     const { rows: models, count } = await this.categoryModel.findAndCountAll({
       limit: props.limit,
       offset: (props.page - 1) * props.limit,

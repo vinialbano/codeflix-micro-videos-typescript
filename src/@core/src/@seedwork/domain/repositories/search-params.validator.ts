@@ -22,7 +22,7 @@ const schema = z
       .toLowerCase()
       .regex(/asc|desc/)
       .catch('asc'),
-    filter: z.string().trim().min(1).nullable().catch(null),
+    filter: z.string().min(1).nullable().catch(null),
   })
   .refine((value) => {
     if (!value.sort) {
