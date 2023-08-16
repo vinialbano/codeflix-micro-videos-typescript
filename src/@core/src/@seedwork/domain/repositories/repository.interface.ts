@@ -6,7 +6,7 @@ import { SearchResult } from './search-result';
 export interface Repository<E extends Entity> {
   insert(entity: E): Promise<void>;
   findById(id: string | UniqueEntityID): Promise<E>;
-  findAll(entity: E): Promise<E[]>;
+  findAll(): Promise<E[]>;
   update(entity: E): Promise<void>;
   delete(id: string | UniqueEntityID): Promise<void>;
 }
