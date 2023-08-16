@@ -40,7 +40,7 @@ export class CategorySequelizeRepository
 
   private async _get(id: string): Promise<CategoryModel> {
     return await this.categoryModel.findByPk(`${id}`, {
-      rejectOnEmpty: new NotFoundError(`Entity not found usind ID ${id}`),
+      rejectOnEmpty: new NotFoundError(`Entity not found using ID ${id}`),
     });
   }
 

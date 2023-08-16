@@ -50,7 +50,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
   describe('findById()', () => {
     it('should throw an error if category not found', async () => {
       await expect(repository.findById('1')).rejects.toThrowError(
-        new NotFoundError('Entity not found usind ID 1'),
+        new NotFoundError('Entity not found using ID 1'),
       );
     });
 
@@ -112,7 +112,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     it('should throw an error if category not found', async () => {
       const category = new Category({ name: 'Category 1' });
       await expect(repository.update(category)).rejects.toThrowError(
-        new NotFoundError(`Entity not found usind ID ${category.id}`),
+        new NotFoundError(`Entity not found using ID ${category.id}`),
       );
     });
 
@@ -148,7 +148,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
   describe('delete()', () => {
     it('should throw an error if category not found', async () => {
       await expect(repository.delete('1')).rejects.toThrowError(
-        new NotFoundError('Entity not found usind ID 1'),
+        new NotFoundError('Entity not found using ID 1'),
       );
     });
 
@@ -170,7 +170,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
       await repository.insert(category);
       await repository.delete(category.id);
       await expect(repository.findById(category.id)).rejects.toThrowError(
-        new NotFoundError(`Entity not found usind ID ${category.id}`),
+        new NotFoundError(`Entity not found using ID ${category.id}`),
       );
     });
   });
