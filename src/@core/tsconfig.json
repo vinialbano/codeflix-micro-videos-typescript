@@ -4,8 +4,9 @@
     "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
+      "#config": ["./config/index.ts"],
       "#seedwork/*": ["./@seedwork/*"],
-      "#category/*": ["./category/*"]
+      "#category/*": ["./category/*"],
     },
     "outDir": "./dist"
   },
