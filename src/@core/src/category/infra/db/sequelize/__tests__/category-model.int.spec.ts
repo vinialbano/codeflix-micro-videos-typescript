@@ -1,4 +1,4 @@
-import { setupSequelize } from '#seedwork/infra';
+import { setupSequelize } from '#seedwork/tests';
 import { DataType } from 'sequelize-typescript';
 import { CategoryModel } from '../category-model';
 

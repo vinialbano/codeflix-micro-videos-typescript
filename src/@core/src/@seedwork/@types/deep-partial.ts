@@ -1,4 +1,4 @@
-export type DeepPartial<Thing> = Thing extends Function
+export type DeepPartial<Thing> = Thing extends (...args: any[]) => any
   ? Thing
   : Thing extends Array<infer InferredArrayMember>
   ? DeepPartialArray<InferredArrayMember>

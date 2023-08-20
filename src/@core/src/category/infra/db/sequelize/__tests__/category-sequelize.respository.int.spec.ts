@@ -4,7 +4,7 @@ import {
   NotFoundError,
   UniqueEntityID,
 } from '#seedwork/domain';
-import { setupSequelize } from '#seedwork/infra';
+import { setupSequelize } from '#seedwork/tests';
 import { Chance } from 'chance';
 import { CategoryModel } from '../category-model';
 import { CategoryModelFactory } from '../category-model.factory';

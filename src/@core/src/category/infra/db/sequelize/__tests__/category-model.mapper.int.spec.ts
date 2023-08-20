@@ -1,6 +1,6 @@
 import { Category } from '#category/domain';
 import { EntityLoadError, EntityValidationError } from '#seedwork/domain';
-import { setupSequelize } from '#seedwork/infra';
+import { setupSequelize } from '#seedwork/tests';
 import { CategoryModel } from '../category-model';
 import { CategoryModelMapper } from '../category-model.mapper';
 

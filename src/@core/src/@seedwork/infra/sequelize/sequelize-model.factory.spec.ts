@@ -6,7 +6,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { setupSequelize } from '../testing/helpers/db';
+import { setupSequelize } from '../../tests/helpers/db';
 import { SequelizeModelFactory } from './sequelize-model.factory';
 
 @Table({ tableName: 'stubs', timestamps: false })

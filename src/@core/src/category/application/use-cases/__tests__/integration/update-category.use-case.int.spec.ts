@@ -2,7 +2,7 @@ import { UpdateCategoryUseCase } from '#category/application';
 import { CategoryModel, CategorySequelizeRepository } from '#category/infra';
 import { CategoryModelFactory } from '#category/infra/db/sequelize/category-model.factory';
 import { NotFoundError } from '#seedwork/domain';
-import { setupSequelize } from '#seedwork/infra';
+import { setupSequelize } from '#seedwork/tests';
 import { Chance } from 'chance';
 
 const makeSut = () => {

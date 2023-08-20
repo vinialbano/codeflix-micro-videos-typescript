@@ -1,4 +1,4 @@
-import { DeepPartial } from '#seedwork/@types/deep-partial';
+import { DeepPartial } from '#seedwork/@types';
 import { EntityValidationError, ValidationErrors } from '#seedwork/domain';
 import { expect } from '@jest/globals';
 import type { MatcherFunction } from 'expect';

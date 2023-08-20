@@ -1,6 +1,6 @@
 import { CreateCategoryUseCase } from '#category/application';
 import { CategoryModel, CategorySequelizeRepository } from '#category/infra';
-import { setupSequelize } from '#seedwork/infra';
+import { setupSequelize } from '#seedwork/tests';
 
 const makeSut = () => {
   const categoryRepository = new CategorySequelizeRepository(CategoryModel);
