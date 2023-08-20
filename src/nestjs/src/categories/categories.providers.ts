@@ -6,13 +6,29 @@ import {
   UpdateCategoryUseCase,
 } from '@codeflix/micro-videos/category/application';
 import { CategoryRepository } from '@codeflix/micro-videos/category/domain';
-import { CategoryInMemoryRepository } from '@codeflix/micro-videos/category/infra';
+import {
+  CategoryInMemoryRepository,
+  CategoryModel,
+  CategorySequelizeRepository,
+} from '@codeflix/micro-videos/category/infra';
+import { getModelToken } from '@nestjs/sequelize';
 
 export namespace CATEGORIES_PROVIDERS {
   export namespace REPOSITORIES {
     export const CATEGORY_IN_MEMORY = {
       provide: 'CategoryInMemoryRepository',
       useClass: CategoryInMemoryRepository,
+    };
+    export const CATEGORY_SEQUELIZE = {
+      provide: 'CategorySequelizeRepository',
+      useFactory: (categoryModel: typeof CategoryModel) => {
+        return new CategorySequelizeRepository(categoryModel);
+      },
+      inject: [getModelToken(CategoryModel)],
+    };
+    export const CATEGORY_REPOSITORY = {
+      provide: 'CategoryRepository',
+      useExisting: 'CategorySequelizeRepository',
     };
   }
 
