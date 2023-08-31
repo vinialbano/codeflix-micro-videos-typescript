@@ -7,6 +7,15 @@ module.exports = {
     '^.+\\.(t|j)s$': ['@swc/jest'],
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
-  coverageDirectory: '<rootDir>/../coverage',
+  coverageDirectory: '../__coverage',
   testEnvironment: 'node',
+  coverageProvider: 'v8',
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+    },
+  },
 };
