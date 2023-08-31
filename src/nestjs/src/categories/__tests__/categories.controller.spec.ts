@@ -4,10 +4,12 @@ import {
   ListCategoriesUseCase,
   UpdateCategoryUseCase,
 } from '@codeflix/micro-videos/category/application';
-import { CategoriesController } from './categories.controller';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { SearchCategoryDto } from './dto/search-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoriesController } from '../categories.controller';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { SearchCategoryDto } from '../dto/search-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { CategoryCollectionPresenter } from '../presenter/category-collection.presenter';
+import { CategoryPresenter } from '../presenter/category.presenter';
 
 describe('CategoriesController Unit Tests', () => {
   let controller: CategoriesController;
@@ -17,15 +19,15 @@ describe('CategoriesController Unit Tests', () => {
   });
 
   it('should create a category', async () => {
-    const expectedOutput: CreateCategoryUseCase.Output = {
-      id: '123e4567-e89b-12d3-a456-426614174000',
+    const output: CreateCategoryUseCase.Output = {
+      id: '123a456b-890c-432a-b101-c234d567e890',
       name: 'Category 1',
       description: 'Category 1 description',
       isActive: true,
       createdAt: new Date(),
     };
     const mockUseCase = {
-      execute: jest.fn().mockResolvedValue(expectedOutput),
+      execute: jest.fn().mockResolvedValue(output),
     };
     // @ts-expect-error - Mocking the use case
     controller['createUseCase'] = mockUseCase;
@@ -34,14 +36,15 @@ describe('CategoriesController Unit Tests', () => {
       description: 'Category 1 description',
       isActive: true,
     };
-    const output = await controller.create(input);
+    const presenter = await controller.create(input);
     expect(mockUseCase.execute).toHaveBeenCalledWith(input);
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should update a category', async () => {
-    const id = '123e4567-e89b-12d3-a456-426614174000';
-    const expectedOutput: UpdateCategoryUseCase.Output = {
+    const id = '123a456b-890c-432a-b101-c234d567e890';
+    const output: UpdateCategoryUseCase.Output = {
       id,
       name: 'Category 1',
       description: 'Category 1 description',
@@ -49,7 +52,7 @@ describe('CategoriesController Unit Tests', () => {
       createdAt: new Date(),
     };
     const mockUseCase = {
-      execute: jest.fn().mockResolvedValue(expectedOutput),
+      execute: jest.fn().mockResolvedValue(output),
     };
     // @ts-expect-error - Mocking the use case
     controller['updateUseCase'] = mockUseCase;
@@ -58,16 +61,17 @@ describe('CategoriesController Unit Tests', () => {
       description: 'Category 1 description',
       isActive: true,
     };
-    const output = await controller.update(id, input);
+    const presenter = await controller.update(id, input);
     expect(mockUseCase.execute).toHaveBeenCalledWith({
       id,
       ...input,
     });
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should delete a category', async () => {
-    const id = '123e4567-e89b-12d3-a456-426614174000';
+    const id = '123a456b-890c-432a-b101-c234d567e890';
     const mockUseCase = {
       execute: jest.fn().mockResolvedValue(undefined),
     };
@@ -80,8 +84,8 @@ describe('CategoriesController Unit Tests', () => {
   });
 
   it('should get a category', async () => {
-    const id = '123e4567-e89b-12d3-a456-426614174000';
-    const expectedOutput: GetCategoryUseCase.Output = {
+    const id = '123a456b-890c-432a-b101-c234d567e890';
+    const output: GetCategoryUseCase.Output = {
       id,
       name: 'Category 1',
       description: 'Category 1 description',
@@ -89,20 +93,21 @@ describe('CategoriesController Unit Tests', () => {
       createdAt: new Date(),
     };
     const mockUseCase = {
-      execute: jest.fn().mockResolvedValue(expectedOutput),
+      execute: jest.fn().mockResolvedValue(output),
     };
     // @ts-expect-error - Mocking the use case
     controller['getUseCase'] = mockUseCase;
-    const output = await controller.findOne(id);
+    const presenter = await controller.findOne(id);
     expect(mockUseCase.execute).toHaveBeenCalledWith({ id });
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should list categories', async () => {
-    const expectedOutput: ListCategoriesUseCase.Output = {
+    const output: ListCategoriesUseCase.Output = {
       items: [
         {
-          id: '123e4567-e89b-12d3-a456-426614174000',
+          id: '123a456b-890c-432a-b101-c234d567e890',
           name: 'Category 1',
           description: 'Category 1 description',
           isActive: true,
@@ -115,7 +120,7 @@ describe('CategoriesController Unit Tests', () => {
       limit: 2,
     };
     const mockUseCase = {
-      execute: jest.fn().mockResolvedValue(expectedOutput),
+      execute: jest.fn().mockResolvedValue(output),
     };
     // @ts-expect-error - Mocking the use case
     controller['listUseCase'] = mockUseCase;
@@ -126,8 +131,9 @@ describe('CategoriesController Unit Tests', () => {
       order: 'asc',
       filter: 'Category 1',
     };
-    const output = await controller.search(input);
+    const presenter = await controller.search(input);
     expect(mockUseCase.execute).toHaveBeenCalledWith(input);
-    expect(output).toStrictEqual(expectedOutput);
+    expect(presenter).toBeInstanceOf(CategoryCollectionPresenter);
+    expect(presenter).toStrictEqual(new CategoryCollectionPresenter(output));
   });
 });
