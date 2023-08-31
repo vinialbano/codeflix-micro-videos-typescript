@@ -28,7 +28,7 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
       const spyUpdate = jest.spyOn(categoryRepository, 'update');
       const category = new Category({ name: 'Old name' });
       categoryRepository.items = [category];
-      const arrange: any[] = [
+      const arrange = [
         {
           given: { name: 'New name 1' },
           expected: { name: 'New name 1', description: null, isActive: true },

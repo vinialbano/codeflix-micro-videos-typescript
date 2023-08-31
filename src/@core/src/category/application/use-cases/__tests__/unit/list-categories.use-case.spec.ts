@@ -33,7 +33,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
       });
     });
 
-    it('should list categories usint pagination, sort, and filter', async () => {
+    it('should list categories using pagination, sort, and filter', async () => {
       const { sut, categoryRepository } = makeSut();
       const items = [
         new Category({ name: 'A', createdAt: new Date(2021, 1, 1) }),
@@ -50,7 +50,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
         new Category({ name: 'BB', createdAt: new Date(2021, 1, 12) }),
       ];
       categoryRepository.items = items;
-      const arrange: any[] = [
+      const arrange = [
         {
           input: { page: 1, limit: 3 },
           output: {
@@ -72,7 +72,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
           },
         },
         {
-          input: { sort: 'name', order: 'asc', limit: 3 },
+          input: { sort: 'name' as const, order: 'asc' as const, limit: 3 },
           output: {
             items: [items[0].toJSON(), items[8].toJSON(), items[9].toJSON()],
             total: 12,
@@ -82,7 +82,12 @@ describe('ListCategoriesUseCase Unit Tests', () => {
           },
         },
         {
-          input: { sort: 'name', order: 'desc', limit: 3, page: 3 },
+          input: {
+            sort: 'name' as const,
+            order: 'desc' as const,
+            limit: 3,
+            page: 3,
+          },
           output: {
             items: [items[1].toJSON(), items[5].toJSON(), items[4].toJSON()],
             total: 12,
@@ -102,7 +107,13 @@ describe('ListCategoriesUseCase Unit Tests', () => {
           },
         },
         {
-          input: { filter: 'b', limit: 3, page: 2, sort: 'name', order: 'asc' },
+          input: {
+            filter: 'b',
+            limit: 3,
+            page: 2,
+            sort: 'name' as const,
+            order: 'asc' as const,
+          },
           output: {
             items: [items[10].toJSON(), items[11].toJSON(), items[6].toJSON()],
             total: 8,

@@ -1,6 +1,6 @@
 import { GetCategoryUseCase } from '#category/application';
+import { CategoryTestBuilder } from '#category/domain/entitites/category.test-builder';
 import { CategoryModel, CategorySequelizeRepository } from '#category/infra';
-import { CategoryModelFactory } from '#category/infra/db/sequelize/category-model.factory';
 import { NotFoundError } from '#seedwork/domain';
 import { setupSequelize } from '#seedwork/tests';
 
@@ -21,15 +21,16 @@ describe('GetCategoryUseCase Integration Tests', () => {
     });
 
     it('should retrieve an existing category', async () => {
-      const { sut } = makeSut();
-      const model = await CategoryModelFactory().create();
-      const result = await sut.execute({ id: model.id });
+      const { sut, categoryRepository } = makeSut();
+      const category = CategoryTestBuilder.aCategory().build();
+      await categoryRepository.insert(category);
+      const result = await sut.execute({ id: category.id });
       expect(result).toStrictEqual({
-        id: model.id,
-        name: model.name,
-        description: model.description,
-        isActive: model.isActive,
-        createdAt: model.createdAt,
+        id: category.id,
+        name: category.name,
+        description: category.description,
+        isActive: category.isActive,
+        createdAt: category.createdAt,
       });
     });
   });

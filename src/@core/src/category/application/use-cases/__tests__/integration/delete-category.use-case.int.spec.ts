@@ -1,6 +1,6 @@
 import { DeleteCategoryUseCase } from '#category/application';
+import { CategoryTestBuilder } from '#category/domain/entitites/category.test-builder';
 import { CategoryModel, CategorySequelizeRepository } from '#category/infra';
-import { CategoryModelFactory } from '#category/infra/db/sequelize/category-model.factory';
 import { NotFoundError } from '#seedwork/domain';
 import { setupSequelize } from '#seedwork/tests';
 
@@ -22,12 +22,16 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
     });
 
     it('should delete an existing category', async () => {
-      const { sut } = makeSut();
-      const model = await CategoryModelFactory().create();
-      const result = await sut.execute({ id: model.id });
+      const { sut, categoryRepository } = makeSut();
+      const category = CategoryTestBuilder.aCategory().build();
+      await categoryRepository.insert(category);
+      const result = await sut.execute({ id: category.id });
       expect(result).toBeUndefined();
-      const foundModel = await CategoryModel.findByPk(model.id);
-      expect(foundModel).toBeNull();
+      await expect(
+        categoryRepository.findById(category.id),
+      ).rejects.toThrowError(
+        new NotFoundError(`Entity not found using ID ${category.id}`),
+      );
     });
   });
 });

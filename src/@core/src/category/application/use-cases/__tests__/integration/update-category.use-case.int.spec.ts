@@ -1,9 +1,8 @@
 import { UpdateCategoryUseCase } from '#category/application';
+import { CategoryTestBuilder } from '#category/domain/entitites/category.test-builder';
 import { CategoryModel, CategorySequelizeRepository } from '#category/infra';
-import { CategoryModelFactory } from '#category/infra/db/sequelize/category-model.factory';
 import { NotFoundError } from '#seedwork/domain';
 import { setupSequelize } from '#seedwork/tests';
-import { Chance } from 'chance';
 
 const makeSut = () => {
   const categoryRepository = new CategorySequelizeRepository(CategoryModel);
@@ -27,15 +26,10 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
     });
 
     it('should update and persist the category', async () => {
-      const { sut } = makeSut();
-      const category = await CategoryModelFactory().create({
-        id: Chance().guid({ version: 4 }),
-        name: 'Category 1',
-        description: 'Description 1',
-        isActive: true,
-        createdAt: new Date(),
-      });
-      const arrange: any[] = [
+      const { sut, categoryRepository } = makeSut();
+      const category = CategoryTestBuilder.aCategory().build();
+      await categoryRepository.insert(category);
+      const arrange = [
         {
           given: { name: 'New name 1' },
           expected: { name: 'New name 1', description: null, isActive: true },
@@ -85,7 +79,7 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
           isActive: expected.isActive,
           createdAt: category.createdAt,
         });
-        const updatedCategory = await CategoryModel.findByPk(category.id);
+        const updatedCategory = await categoryRepository.findById(category.id);
         expect(updatedCategory.name).toBe(expected.name);
         expect(updatedCategory.description).toBe(expected.description);
         expect(updatedCategory.isActive).toBe(expected.isActive);
