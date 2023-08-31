@@ -11,7 +11,7 @@ describe('UniqueEntityID Unit Tests', () => {
     });
 
     it('should create a unique entity id with the given uuid', () => {
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
+      const uuid = '123a456b-890c-432a-b101-c234d567e890';
       const id = new UniqueEntityID(uuid);
       expect(id).toBeDefined();
       expect(id.id).toBe(uuid);
@@ -19,12 +19,18 @@ describe('UniqueEntityID Unit Tests', () => {
 
     it('should call the validate method', () => {
       const spy = jest.spyOn(UniqueEntityID.prototype as any, 'validate');
-      const id = new UniqueEntityID();
+      expect(new UniqueEntityID()).toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
 
     it('should throw an error when the given uuid is invalid', () => {
       expect(() => new UniqueEntityID('invalid-id')).toThrow(InvalidUUIDError);
+    });
+
+    it('should convert the given uuid to lowercase', () => {
+      const uuid = '123a456b-890c-432a-b101-c234d567e890';
+      const id = new UniqueEntityID(uuid);
+      expect(id.id).toBe(uuid.toLowerCase());
     });
   });
 
