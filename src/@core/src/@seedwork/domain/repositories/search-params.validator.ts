@@ -21,12 +21,16 @@ const schema = z
       .trim()
       .toLowerCase()
       .regex(/asc|desc/)
-      .catch('asc'),
+      .nullable()
+      .catch(null),
     filter: z.string().min(1).nullable().catch(null),
   })
   .refine((value) => {
     if (!value.sort) {
       value.order = null;
+    }
+    if (value.sort && !value.order) {
+      value.order = 'asc';
     }
     return true;
   });
