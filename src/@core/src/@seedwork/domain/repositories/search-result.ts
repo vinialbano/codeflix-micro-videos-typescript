@@ -39,7 +39,7 @@ export class SearchResult<E extends Entity, Filter = string> {
     if (validator.errors) {
       throw new RepositoryValidationError(validator.errors);
     }
-    return validator.validatedData;
+    return validator.validatedData!;
   }
 
   get items(): E[] {

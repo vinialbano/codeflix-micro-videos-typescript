@@ -3,7 +3,7 @@ import { ListCategoriesUseCase } from '@codeflix/micro-videos/category/applicati
 export class SearchCategoryDto implements ListCategoriesUseCase.Input {
   page?: number;
   limit?: number;
-  sort?: string;
-  order?: string;
+  sort?: 'name' | 'isActive' | 'createdAt' | null;
+  order?: 'asc' | 'desc' | null;
   filter?: string;
 }

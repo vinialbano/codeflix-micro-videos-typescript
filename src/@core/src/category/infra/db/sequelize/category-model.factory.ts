@@ -6,7 +6,7 @@ const chance = new Chance();
 
 export const CategoryModelFactory = () => {
   return new SequelizeModelFactory(CategoryModel, () => ({
-    id: chance.guid(),
+    id: chance.guid({ version: 4 }),
     name: chance.name(),
     description: chance.sentence(),
     isActive: chance.bool(),

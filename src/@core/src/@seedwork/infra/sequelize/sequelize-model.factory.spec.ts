@@ -39,7 +39,7 @@ describe('Sequelize Model Factory', () => {
       const model = await factory.create();
       expect(model).toBeInstanceOf(StubModel);
       expect(mockFactory).toHaveBeenCalled();
-      const modelFound = await StubModel.findByPk(model.id);
+      const modelFound: StubModel = (await StubModel.findByPk(model.id))!;
       expect(modelFound.id).toEqual(model.id);
     });
 
@@ -52,7 +52,7 @@ describe('Sequelize Model Factory', () => {
       const model = await factory.create(customData);
       expect(model).toBeInstanceOf(StubModel);
       expect(mockFactory).not.toHaveBeenCalled();
-      const modelFound = await StubModel.findByPk(model.id);
+      const modelFound: StubModel = (await StubModel.findByPk(model.id))!;
       expect(modelFound.id).toEqual(model.id);
       expect(modelFound.name).toEqual(customData.name);
     });

@@ -6,7 +6,7 @@ import { CategoryOutputMapper } from './mappers';
 export namespace CreateCategoryUseCase {
   export type Input = {
     name: string;
-    description?: string;
+    description?: string | null;
     isActive?: boolean;
   };
 

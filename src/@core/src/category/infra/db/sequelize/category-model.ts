@@ -1,6 +1,7 @@
 import {
   Column,
   DataType,
+  IsUUID,
   Model,
   PrimaryKey,
   Table,
@@ -16,6 +17,7 @@ type CategoryModelProperties = {
 
 @Table({ tableName: 'categories', timestamps: false })
 export class CategoryModel extends Model<CategoryModelProperties> {
+  @IsUUID(4)
   @PrimaryKey
   @Column({ type: DataType.UUID })
   declare id: string;

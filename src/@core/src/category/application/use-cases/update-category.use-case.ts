@@ -7,7 +7,7 @@ export namespace UpdateCategoryUseCase {
   export type Input = {
     id: string;
     name: string;
-    description?: string;
+    description?: string | null;
     isActive?: boolean;
   };
 

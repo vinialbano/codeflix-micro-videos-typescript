@@ -30,26 +30,26 @@ export class SearchParams<E extends Entity, Filter = string> {
   ): SearchParamsProps<E, Filter> {
     const validator = new SearchParamsValidator<E, Filter>();
     validator.validate(props);
-    return validator.validatedData;
+    return validator.validatedData!;
   }
 
   get page(): number {
-    return this.props.page;
+    return this.props.page!;
   }
 
   get limit(): number {
-    return this.props.limit;
+    return this.props.limit!;
   }
 
   get sort(): 'id' | EntityPropsKeys<E> | null {
-    return this.props.sort;
+    return this.props.sort!;
   }
 
   get order(): SortOrder | null {
-    return this.props.order;
+    return this.props.order!;
   }
 
   get filter(): Filter | null {
-    return this.props.filter;
+    return this.props.filter!;
   }
 }

@@ -5,7 +5,7 @@ class StubEntity extends Entity {}
 
 describe('Entity Unit Tests', () => {
   describe('Constructor of Entity', () => {
-    it.each([new UniqueEntityID(), null, undefined])(
+    it.each([new UniqueEntityID(), undefined])(
       'should have a valid id',
       (id) => {
         const props = { prop: 'value' };
