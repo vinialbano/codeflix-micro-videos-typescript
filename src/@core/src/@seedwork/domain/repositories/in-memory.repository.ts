@@ -14,6 +14,10 @@ export abstract class InMemoryRepository<E extends Entity>
     this.items.push(entity);
   }
 
+  async insertMany(entities: E[]): Promise<void> {
+    this.items.push(...entities);
+  }
+
   async findById(id: string | UniqueEntityID): Promise<E> {
     return this._get(id);
   }

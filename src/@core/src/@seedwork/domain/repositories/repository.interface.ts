@@ -5,6 +5,7 @@ import { SearchResult } from './search-result';
 
 export interface Repository<E extends Entity> {
   insert(entity: E): Promise<void>;
+  insertMany(entities: E[]): Promise<void>;
   findById(id: string | UniqueEntityID): Promise<E>;
   findAll(): Promise<E[]>;
   update(entity: E): Promise<void>;

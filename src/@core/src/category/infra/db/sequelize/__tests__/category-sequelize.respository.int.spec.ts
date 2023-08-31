@@ -1,15 +1,24 @@
 import { Category, CategoryRepository } from '#category/domain';
-import {
-  EntityLoadError,
-  NotFoundError,
-  UniqueEntityID,
-} from '#seedwork/domain';
+import { CategoryTestBuilder } from '#category/domain/entitites/category.test-builder';
+import { EntityLoadError, NotFoundError } from '#seedwork/domain';
 import { setupSequelize } from '#seedwork/tests';
 import { Chance } from 'chance';
 import { CategoryModel } from '../category-model';
-import { CategoryModelFactory } from '../category-model.factory';
-import { CategoryModelMapper } from '../category-model.mapper';
 import { CategorySequelizeRepository } from '../category-sequelize.repository';
+
+const makeInvalidCategoryProps = () => {
+  const builder = CategoryTestBuilder.aCategory()
+    .withInvalidNameIsTooShort()
+    .active()
+    .withCreatedAt(new Date());
+
+  return {
+    id: Chance().guid({ version: 4 }),
+    name: builder.name,
+    isActive: builder.isActive,
+    createdAt: new Date(),
+  };
+};
 
 describe('CategorySequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -23,25 +32,33 @@ describe('CategorySequelizeRepository Integration Tests', () => {
 
   describe('insert()', () => {
     it('should insert a new category', async () => {
+      const builder = CategoryTestBuilder.aCategory();
       const arrange: any[] = [
-        {
-          name: 'Category 1',
-        },
-        {
-          name: 'Category 2',
-          description: 'Category 2 description',
-          isActive: false,
-        },
-        {
-          name: 'Category 3',
-          description: null,
-          isActive: true,
-        },
+        builder.build(),
+        builder.withDescription(null).build(),
+        builder.inactive().build(),
       ];
-      for (const item of arrange) {
-        const category = new Category(item);
+      for (const category of arrange) {
         await repository.insert(category);
         const model = await CategoryModel.findByPk(category.id);
+        expect(model!.toJSON()).toStrictEqual(category.toJSON());
+      }
+    });
+  });
+
+  describe('insertMany()', () => {
+    it('should insert many categories', async () => {
+      const builder = CategoryTestBuilder.aCategory();
+      const arrange: Category[] = [
+        builder.build(),
+        builder.withDescription(null).build(),
+        builder.inactive().build(),
+      ];
+      await repository.insertMany(arrange);
+      const models = await CategoryModel.findAll();
+      expect(models.length).toBe(arrange.length);
+      for (const model of models) {
+        const category: Category = arrange.find((c) => c.id === model.id)!;
         expect(model.toJSON()).toStrictEqual(category.toJSON());
       }
     });
@@ -55,9 +72,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should find a category by id', async () => {
-      const category = new Category({
-        name: 'Category 1',
-      });
+      const category = CategoryTestBuilder.aCategory().build();
       await repository.insert(category);
       const result = await repository.findById(category.id);
       expect(result).toStrictEqual(category);
@@ -66,13 +81,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
 
   describe('findAll()', () => {
     it('should throw an error if a category is not valid', async () => {
-      const id = '123e4567-e89b-12d3-a456-426614174000';
-      await CategoryModel.create({
-        id,
-        name: '',
-        isActive: true,
-        createdAt: new Date(),
-      });
+      await CategoryModel.create(makeInvalidCategoryProps());
       await expect(repository.findAll()).rejects.toThrowError(EntityLoadError);
     });
 
@@ -82,51 +91,32 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return all categories', async () => {
-      const arrange: any[] = [
-        {
-          name: 'Category 1',
-        },
-        {
-          name: 'Category 2',
-          description: 'Category 2 description',
-          isActive: false,
-        },
-        {
-          name: 'Category 3',
-          description: null,
-          isActive: true,
-        },
+      const builder = CategoryTestBuilder.aCategory();
+      const categories: Category[] = [
+        builder.build(),
+        builder.withDescription(null).build(),
+        builder.inactive().build(),
       ];
-      const expected: Category[] = [];
-      for (const item of arrange) {
-        const category = new Category(item);
-        await repository.insert(category);
-        expected.push(category);
-      }
+      await repository.insertMany(categories);
       const result = await repository.findAll();
-      expect(result).toStrictEqual(expected);
+      expect(result).toStrictEqual(categories);
     });
   });
 
   describe('update()', () => {
     it('should throw an error if category not found', async () => {
-      const category = new Category({ name: 'Category 1' });
+      const category = CategoryTestBuilder.aCategory().build();
       await expect(repository.update(category)).rejects.toThrowError(
         new NotFoundError(`Entity not found using ID ${category.id}`),
       );
     });
 
     it('should throw an error if category is not valid', async () => {
-      const id = '123e4567-e89b-12d3-a456-426614174000';
-      const category = new Category(
-        { name: 'Category 1' },
-        new UniqueEntityID(id),
-      );
+      const category = CategoryTestBuilder.aCategory().build();
+      const invalidProps = makeInvalidCategoryProps();
       await CategoryModel.create({
-        id,
-        name: '',
-        isActive: true,
-        createdAt: new Date(),
+        ...invalidProps,
+        id: category.id,
       });
       await expect(repository.update(category)).rejects.toThrowError(
         EntityLoadError,
@@ -134,11 +124,9 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should update a category', async () => {
-      const category = new Category({
-        name: 'Category 1',
-      });
+      const category = CategoryTestBuilder.aCategory().build();
       await repository.insert(category);
-      category.update('Category 1 updated', 'Category 1 description');
+      category.update('New name', 'New description');
       await repository.update(category);
       const result = await repository.findById(category.id);
       expect(result).toStrictEqual(category);
@@ -153,20 +141,15 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should throw an error if category is not valid', async () => {
-      const id = '123e4567-e89b-12d3-a456-426614174000';
-      await CategoryModel.create({
-        id,
-        name: '',
-        isActive: true,
-        createdAt: new Date(),
-      });
-      await expect(repository.delete(id)).rejects.toThrowError(EntityLoadError);
+      const invalidProps = makeInvalidCategoryProps();
+      await CategoryModel.create(invalidProps);
+      await expect(repository.delete(invalidProps.id)).rejects.toThrowError(
+        EntityLoadError,
+      );
     });
 
     it('should delete a category', async () => {
-      const category = new Category({
-        name: 'Category 1',
-      });
+      const category = CategoryTestBuilder.aCategory().build();
       await repository.insert(category);
       await repository.delete(category.id);
       await expect(repository.findById(category.id)).rejects.toThrowError(
@@ -177,13 +160,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
 
   describe('search()', () => {
     it('should throw an error if a category is not valid', async () => {
-      const id = '123e4567-e89b-12d3-a456-426614174000';
-      await CategoryModel.create({
-        id,
-        name: '',
-        isActive: true,
-        createdAt: new Date(),
-      });
+      await CategoryModel.create(makeInvalidCategoryProps());
       await expect(repository.search()).rejects.toThrowError(EntityLoadError);
     });
 
@@ -203,18 +180,18 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return paginated categories ordered by `createdAt` when other params are not provided', async () => {
-      const entities = (await CategoryModelFactory().count(20).bulkCreate())
-        .sort((a, b) => {
-          if (a.createdAt < b.createdAt) return 1;
-          if (a.createdAt > b.createdAt) return -1;
-          return 0;
-        })
-        .map(CategoryModelMapper.toEntity);
+      const categories = CategoryTestBuilder.manyCategories(20).build();
+      await repository.insertMany(categories);
+      categories.sort((a, b) => {
+        if (a.createdAt < b.createdAt) return 1;
+        if (a.createdAt > b.createdAt) return -1;
+        return 0;
+      });
       const arrange = [
         {
           given: undefined,
           expected: {
-            items: entities.slice(0, 15),
+            items: categories.slice(0, 15),
             currentPage: 1,
             limit: 15,
           },
@@ -222,7 +199,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { page: 2 },
           expected: {
-            items: entities.slice(15),
+            items: categories.slice(15),
             currentPage: 2,
             limit: 15,
           },
@@ -230,7 +207,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { page: 2, limit: 8 },
           expected: {
-            items: entities.slice(8, 16),
+            items: categories.slice(8, 16),
             currentPage: 2,
             limit: 8,
           },
@@ -253,18 +230,18 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return paginated categories ordered by `createdAt` when an invalid sort is provided', async () => {
-      const entities = (await CategoryModelFactory().count(20).bulkCreate())
-        .sort((a, b) => {
-          if (a.createdAt < b.createdAt) return 1;
-          if (a.createdAt > b.createdAt) return -1;
-          return 0;
-        })
-        .map(CategoryModelMapper.toEntity);
+      const categories = CategoryTestBuilder.manyCategories(20).build();
+      await repository.insertMany(categories);
+      categories.sort((a, b) => {
+        if (a.createdAt < b.createdAt) return 1;
+        if (a.createdAt > b.createdAt) return -1;
+        return 0;
+      });
       const arrange: any[] = [
         {
           given: { sort: 'any', order: 'asc' },
           expected: {
-            items: entities.slice(0, 15),
+            items: categories.slice(0, 15),
             currentPage: 1,
             limit: 15,
           },
@@ -272,7 +249,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'any', order: 'desc' },
           expected: {
-            items: entities.slice(0, 15),
+            items: categories.slice(0, 15),
             currentPage: 1,
             limit: 15,
           },
@@ -295,11 +272,10 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return paginated categories ordered by a specific attribute when provided', async () => {
-      const entities = (
-        await CategoryModelFactory().count(20).bulkCreate()
-      ).map(CategoryModelMapper.toEntity);
-      const sortEntities = (prop: string, order: 'asc' | 'desc' = 'asc') =>
-        [...entities].sort((a, b) => {
+      const categories = CategoryTestBuilder.manyCategories(20).build();
+      await repository.insertMany(categories);
+      const sortCategories = (prop: string, order: 'asc' | 'desc' = 'asc') =>
+        [...categories].sort((a, b) => {
           if (a[prop] < b[prop]) return order === 'asc' ? -1 : 1;
           if (a[prop] > b[prop]) return order === 'asc' ? 1 : -1;
           return 0;
@@ -308,7 +284,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'name' },
           expected: {
-            items: sortEntities('name').slice(0, 15),
+            items: sortCategories('name').slice(0, 15),
             currentPage: 1,
             limit: 15,
             sort: 'name',
@@ -318,7 +294,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'name', order: 'desc' },
           expected: {
-            items: sortEntities('name', 'desc').slice(0, 15),
+            items: sortCategories('name', 'desc').slice(0, 15),
             currentPage: 1,
             limit: 15,
             sort: 'name',
@@ -328,7 +304,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'isActive', page: 2 },
           expected: {
-            items: sortEntities('isActive').slice(15),
+            items: sortCategories('isActive').slice(15),
             currentPage: 2,
             limit: 15,
             sort: 'isActive',
@@ -338,7 +314,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'isActive', order: 'desc', page: 2, limit: 8 },
           expected: {
-            items: sortEntities('isActive', 'desc').slice(8, 16),
+            items: sortCategories('isActive', 'desc').slice(8, 16),
             currentPage: 2,
             limit: 8,
             sort: 'isActive',
@@ -361,22 +337,23 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return paginated categories, sorted by `createdAt` by default and filtered by `name` when provided', async () => {
-      const entities = (
-        await CategoryModelFactory()
-          .count(12)
-          .bulkCreate((n) => ({
-            id: Chance().guid({ version: 4 }),
-            name: `Category ${n + 1}`,
-            description: null,
-            isActive: true,
-            createdAt: new Date(`2021-01-${n + 1 < 10 ? `0${n + 1}` : n + 1}`),
-          }))
-      ).map(CategoryModelMapper.toEntity);
+      const categories = CategoryTestBuilder.manyCategories(12)
+        .withName((i) => `Category ${i + 1}`)
+        .withDescription(null)
+        .withIsActive((i) => i % 2 === 0)
+        .withCreatedAt((i) => new Date(new Date().getTime() + i * 100))
+        .build();
+      await repository.insertMany(categories);
       const arrange: any[] = [
         {
           given: { filter: 'Category 1' },
           expected: {
-            items: [entities[11], entities[10], entities[9], entities[0]],
+            items: [
+              categories[11],
+              categories[10],
+              categories[9],
+              categories[0],
+            ],
             currentPage: 1,
             limit: 15,
             filter: 'Category 1',
@@ -386,7 +363,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { filter: 'Category 2' },
           expected: {
-            items: [entities[1]],
+            items: [categories[1]],
             currentPage: 1,
             limit: 15,
             filter: 'Category 2',
@@ -409,23 +386,24 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     });
 
     it('should return paginated categories, sorted by a specific attribute and filtered by `name` when provided', async () => {
-      const entities = (
-        await CategoryModelFactory()
-          .count(12)
-          .bulkCreate((n) => ({
-            id: Chance().guid({ version: 4 }),
-            name: `Category ${n + 1}`,
-            description: null,
-            isActive: n % 2 === 0 ? true : false,
-            createdAt: new Date(`2021-01-${n + 1 < 10 ? `0${n + 1}` : n + 1}`),
-          }))
-      ).map(CategoryModelMapper.toEntity);
+      const categories = CategoryTestBuilder.manyCategories(12)
+        .withName((i) => `Category ${i + 1}`)
+        .withDescription(null)
+        .withIsActive((i) => i % 2 === 0)
+        .withCreatedAt((i) => new Date(new Date().getTime() + i * 100))
+        .build();
+      await repository.insertMany(categories);
 
       const arrange: any[] = [
         {
           given: { sort: 'name', filter: 'Category 1' },
           expected: {
-            items: [entities[0], entities[9], entities[10], entities[11]],
+            items: [
+              categories[0],
+              categories[9],
+              categories[10],
+              categories[11],
+            ],
             currentPage: 1,
             limit: 15,
             sort: 'name',
@@ -437,7 +415,12 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'name', order: 'desc', filter: 'Category 1' },
           expected: {
-            items: [entities[11], entities[10], entities[9], entities[0]],
+            items: [
+              categories[11],
+              categories[10],
+              categories[9],
+              categories[0],
+            ],
             currentPage: 1,
             limit: 15,
             sort: 'name',
@@ -449,7 +432,12 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'isActive', filter: 'Category 1' },
           expected: {
-            items: [entities[9], entities[11], entities[0], entities[10]],
+            items: [
+              categories[9],
+              categories[11],
+              categories[0],
+              categories[10],
+            ],
             currentPage: 1,
             limit: 15,
             sort: 'isActive',
@@ -461,7 +449,12 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         {
           given: { sort: 'isActive', order: 'desc', filter: 'Category 1' },
           expected: {
-            items: [entities[0], entities[10], entities[9], entities[11]],
+            items: [
+              categories[0],
+              categories[10],
+              categories[9],
+              categories[11],
+            ],
             currentPage: 1,
             limit: 15,
             sort: 'isActive',
@@ -479,7 +472,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
             limit: 2,
           },
           expected: {
-            items: [entities[9], entities[11]],
+            items: [categories[9], categories[11]],
             currentPage: 2,
             limit: 2,
             sort: 'isActive',

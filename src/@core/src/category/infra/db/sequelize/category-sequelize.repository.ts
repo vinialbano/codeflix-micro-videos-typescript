@@ -21,6 +21,10 @@ export class CategorySequelizeRepository
     await this.categoryModel.create(entity.toJSON());
   }
 
+  async insertMany(entities: Category[]): Promise<void> {
+    await this.categoryModel.bulkCreate(entities.map((e) => e.toJSON()));
+  }
+
   async findById(id: string | UniqueEntityID): Promise<Category> {
     const model = await this._get(`${id}`);
     return CategoryModelMapper.toEntity(model);
@@ -57,7 +61,7 @@ export class CategorySequelizeRepository
       offset: (props.page - 1) * props.limit,
       order:
         props.sort && this.sortableFields.includes(props.sort)
-          ? [[props.sort, props.order]]
+          ? [[props.sort, props.order!]]
           : [['createdAt', 'DESC']],
       ...(props.filter && {
         where: { name: { [Op.like]: `%${props.filter}%` } },

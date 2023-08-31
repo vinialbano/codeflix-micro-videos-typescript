@@ -31,6 +31,17 @@ describe('InMemoryRepository Unit Tests', () => {
     });
   });
 
+  describe('insertMany()', () => {
+    it('should insert many entities', async () => {
+      const { sut } = makeSut();
+      const entity1 = new StubEntity({ name: 'any_name' });
+      const entity2 = new StubEntity({ name: 'any_name' });
+      await sut.insertMany([entity1, entity2]);
+      expect(entity1.toJSON()).toStrictEqual(sut.items[0].toJSON());
+      expect(entity2.toJSON()).toStrictEqual(sut.items[1].toJSON());
+    });
+  });
+
   describe('findById()', () => {
     it('should find an entity by id', async () => {
       const { sut } = makeSut();
