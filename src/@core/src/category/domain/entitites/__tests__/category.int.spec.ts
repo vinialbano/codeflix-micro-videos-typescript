@@ -139,7 +139,7 @@ describe('Category Integration Tests', () => {
       },
     ])('should throw an error if name is invalid', ({ name, error }) => {
       expect(() =>
-        new Category({ name }).update(name, undefined),
+        new Category({ name }).update(name, null),
       ).toContainErrorMessages({
         name: {
           _errors: [error],
@@ -166,9 +166,6 @@ describe('Category Integration Tests', () => {
     );
 
     it.each([
-      {
-        name: 'Series',
-      },
       {
         name: 'Series',
         description: 'Series description',

@@ -1,8 +1,14 @@
 import { Category, CategoryProperties } from '#category/domain';
 import { UniqueEntityID } from '#seedwork/domain';
-describe('Category Tests', () => {
+describe('Category Unit Tests', () => {
   beforeEach(() => {
-    Category.validate = jest.fn();
+    Category.validate = jest.fn().mockImplementation((input) => ({
+      id: new UniqueEntityID(),
+      name: input.name,
+      description: input.description ?? null,
+      isActive: input.isActive ?? true,
+      createdAt: input.createdAt ?? new Date(),
+    }));
   });
   describe('Constructor of Category', () => {
     it('should validate the properties', () => {
@@ -14,7 +20,7 @@ describe('Category Tests', () => {
       };
       expect(() => new Category(props)).not.toThrow();
       expect(Category.validate).toHaveBeenCalledTimes(1);
-      expect(Category.validate).toHaveBeenCalledWith(props);
+      expect(Category.validate).toHaveBeenCalledWith(props, undefined);
     });
 
     it('should throw if the properties are invalid', () => {
@@ -24,7 +30,7 @@ describe('Category Tests', () => {
       });
       expect(() => new Category(props)).toThrow();
       expect(Category.validate).toHaveBeenCalledTimes(1);
-      expect(Category.validate).toHaveBeenCalledWith(props);
+      expect(Category.validate).toHaveBeenCalledWith(props, undefined);
     });
 
     it.each<CategoryProperties>([
@@ -43,10 +49,10 @@ describe('Category Tests', () => {
     ])('should create a category with all the properties', (props) => {
       const category = new Category(props);
       expect(category).toBeDefined();
-      expect(category.name).toBe(props.name);
-      expect(category.description).toBe(props.description);
-      expect(category.isActive).toBe(props.isActive);
-      expect(category.createdAt).toBe(props.createdAt);
+      expect(category.name).toEqual(props.name);
+      expect(category.description).toEqual(props.description);
+      expect(category.isActive).toEqual(props.isActive);
+      expect(category.createdAt).toEqual(props.createdAt);
     });
 
     it('should create a category without the description property', () => {
@@ -56,9 +62,9 @@ describe('Category Tests', () => {
         createdAt: new Date(),
       };
       const category = new Category(props);
-      expect(category.name).toBe(props.name);
-      expect(category.isActive).toBe(props.isActive);
-      expect(category.createdAt).toBe(props.createdAt);
+      expect(category.name).toEqual(props.name);
+      expect(category.isActive).toEqual(props.isActive);
+      expect(category.createdAt).toEqual(props.createdAt);
       expect(category.description).toBeNull();
     });
 
@@ -68,8 +74,8 @@ describe('Category Tests', () => {
         createdAt: new Date(),
       };
       const category = new Category(props);
-      expect(category.name).toBe(props.name);
-      expect(category.createdAt).toBe(props.createdAt);
+      expect(category.name).toEqual(props.name);
+      expect(category.createdAt).toEqual(props.createdAt);
       expect(category.isActive).toBe(true);
     });
 
@@ -78,11 +84,11 @@ describe('Category Tests', () => {
         name: 'Movie',
       };
       const category = new Category(props);
-      expect(category.name).toBe(props.name);
+      expect(category.name).toEqual(props.name);
       expect(category.createdAt).toBeInstanceOf(Date);
     });
 
-    it.each([new UniqueEntityID(), null, undefined])(
+    it.each([new UniqueEntityID(), undefined])(
       'should have a valid id',
       (id) => {
         const props: CategoryProperties = {
@@ -107,7 +113,7 @@ describe('Category Tests', () => {
         };
         const category = new Category(props);
         // @ts-ignore
-        expect(category[property]).toBe(props[property]);
+        expect(category[property]).toEqual(props[property]);
       },
     );
   });
@@ -163,13 +169,13 @@ describe('Category Tests', () => {
       const newName = 'Series';
       const newDescription = 'A series of movies.';
       category.update(newName, newDescription);
-      expect(category.name).toBe(newName);
-      expect(category.description).toBe(newDescription);
+      expect(category.name).toEqual(newName);
+      expect(category.description).toEqual(newDescription);
       category.update(newName, null);
-      expect(category.name).toBe(newName);
+      expect(category.name).toEqual(newName);
       expect(category.description).toBeNull();
-      category.update(newName, undefined);
-      expect(category.name).toBe(newName);
+      category.update(newName);
+      expect(category.name).toEqual(newName);
       expect(category.description).toBeNull();
     });
   });

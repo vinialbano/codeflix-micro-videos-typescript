@@ -1,9 +1,9 @@
-import { CategoryValidator } from '../validators';
 import {
   Entity,
   EntityValidationError,
   UniqueEntityID,
 } from '#seedwork/domain';
+import { CategoryValidator } from '../validators';
 
 export type CategoryProperties = {
   name: string;
@@ -12,13 +12,10 @@ export type CategoryProperties = {
   createdAt?: Date;
 };
 
-export class Category extends Entity<CategoryProperties> {
+export class Category extends Entity<Required<CategoryProperties>> {
   constructor(props: CategoryProperties, id?: UniqueEntityID) {
-    Category.validate(props);
-    super(props, id);
-    this._props.description = props.description ?? null;
-    this._props.isActive = props.isActive ?? true;
-    this._props.createdAt = props.createdAt ?? new Date();
+    const { id: _id, ..._props } = Category.validate(props, id);
+    super(_props, _id);
   }
 
   get name(): string {
@@ -37,18 +34,22 @@ export class Category extends Entity<CategoryProperties> {
     return this._props.createdAt;
   }
 
-  update(name: string, description: string): void {
-    Category.validate({ name, description });
-    this._props.name = name;
-    this._props.description = description ?? null;
+  update(name: string, description?: string | null): void {
+    const props = Category.validate({ name, description });
+    this._props.name = props.name;
+    this._props.description = props.description;
   }
 
-  static validate(props: CategoryProperties): void {
+  static validate(
+    props: CategoryProperties,
+    id?: UniqueEntityID,
+  ): Required<CategoryProperties> & { id?: UniqueEntityID } {
     const validator = new CategoryValidator();
-    validator.validate(props);
+    validator.validate(props, id);
     if (validator.errors) {
       throw new EntityValidationError(validator.errors);
     }
+    return validator.validatedData as any;
   }
 
   activate(): void {
