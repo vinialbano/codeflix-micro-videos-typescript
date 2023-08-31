@@ -18,7 +18,7 @@ describe('CategoryModelMapper Integration Tests', () => {
         });
       });
       const model = new CategoryModel({
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123a456b-890c-432a-b101-c234d567e890',
         name: '',
         description: 'Category 1 description',
         isActive: true,
@@ -34,7 +34,7 @@ describe('CategoryModelMapper Integration Tests', () => {
         throw new Error('Something wrong happened');
       });
       const model = new CategoryModel({
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123a456b-890c-432a-b101-c234d567e890',
         name: 'Category 1',
         description: 'Category 1 description',
         isActive: true,
@@ -47,7 +47,7 @@ describe('CategoryModelMapper Integration Tests', () => {
 
     it('should return a Category entity', () => {
       const model = new CategoryModel({
-        id: '123e4567-e89b-12d3-a456-426614174000',
+        id: '123a456b-890c-432a-b101-c234d567e890',
         name: 'Category 1',
         description: 'Category 1 description',
         isActive: true,

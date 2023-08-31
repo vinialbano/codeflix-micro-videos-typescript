@@ -51,7 +51,7 @@ describe('CategoryModel Integration Tests', () => {
 
   it('should create a category', async () => {
     const arrange = {
-      id: '123e4567-e89b-12d3-a456-426614174000',
+      id: '123a456b-890c-432a-b101-c234d567e890',
       name: 'Category 1',
       description: 'Category 1 description',
       isActive: true,
