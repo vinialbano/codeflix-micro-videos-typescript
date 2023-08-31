@@ -6,6 +6,7 @@
       "decorators": true
     },
     "baseUrl": "./src",
+    "keepClassNames": true,
     "paths": {                                            
       "#config": ["./config/index.ts"],
       "#seedwork/*": ["./@seedwork/*"],

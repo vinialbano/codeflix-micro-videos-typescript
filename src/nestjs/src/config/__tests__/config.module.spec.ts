@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { databaseSchema } from '../config.module';
+import { MySQLSchema, databaseSchema } from '../config.module';
 
 function expectToContainError(
   data: Record<string, unknown>,
@@ -281,6 +281,35 @@ describe('ConfigModule Unit Tests', () => {
           });
         });
       });
+
+      it.each([
+        {
+          DB_PORT: 3306,
+          DB_LOGGING: true,
+          DB_AUTO_LOAD_MODELS: false,
+        },
+        {
+          DB_PORT: '3306',
+          DB_LOGGING: 'false',
+          DB_AUTO_LOAD_MODELS: 'true',
+        },
+      ])('should be valid with all fields', (input) => {
+        const result = databaseSchema.safeParse({
+          DB_VENDOR: 'mysql',
+          DB_HOST: 'localhost',
+          DB_USERNAME: 'root',
+          DB_PASSWORD: 'root',
+          DB_DATABASE: 'database',
+          ...input,
+        });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          const data = result.data as MySQLSchema;
+          expect(typeof data.DB_LOGGING).toBe('boolean');
+          expect(typeof data.DB_AUTO_LOAD_MODELS).toBe('boolean');
+          expect(typeof data.DB_PORT).toBe('number');
+        }
+      });
     });
     describe('SQLite Schema', () => {
       describe('DB_FILENAME', () => {
@@ -325,6 +354,29 @@ describe('ConfigModule Unit Tests', () => {
             });
           },
         );
+      });
+
+      it.each([
+        {
+          DB_LOGGING: true,
+          DB_AUTO_LOAD_MODELS: false,
+        },
+        {
+          DB_LOGGING: 'false',
+          DB_AUTO_LOAD_MODELS: 'true',
+        },
+      ])('should be valid with all fields', (input) => {
+        const result = databaseSchema.safeParse({
+          DB_VENDOR: 'sqlite',
+          DB_HOST: ':memory:',
+          ...input,
+        });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          const data = result.success && (result.data as MySQLSchema);
+          expect(typeof data.DB_LOGGING).toBe('boolean');
+          expect(typeof data.DB_AUTO_LOAD_MODELS).toBe('boolean');
+        }
       });
     });
   });

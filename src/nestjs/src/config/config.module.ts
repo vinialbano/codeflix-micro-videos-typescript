@@ -27,8 +27,12 @@ const sqliteSchema = z.object({
 export const databaseBaseSchema = z.object({
   DB_VENDOR: z.enum(['mysql', 'sqlite']),
   DB_HOST: z.string().trim().min(1),
-  DB_LOGGING: z.boolean().or(z.enum(['true', 'false'])),
-  DB_AUTO_LOAD_MODELS: z.boolean().or(z.enum(['true', 'false'])),
+  DB_LOGGING: z
+    .boolean()
+    .or(z.enum(['true', 'false']).transform((v) => JSON.parse(v))),
+  DB_AUTO_LOAD_MODELS: z
+    .boolean()
+    .or(z.enum(['true', 'false']).transform((v) => JSON.parse(v))),
 });
 
 export const databaseSchema = databaseBaseSchema.and(
@@ -40,10 +44,15 @@ export const configSchema = databaseSchema;
 export class ConfigModule extends NestConfigModule {
   static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
     const { envFilePath, ...otherOptions } = options;
+    let envFilePaths: string[] = [];
+    if (envFilePath) {
+      envFilePaths = Array.isArray(envFilePath) ? envFilePath : [envFilePath];
+    }
+
     return super.forRoot({
       isGlobal: true,
       envFilePath: [
-        ...(Array.isArray(envFilePath) ? envFilePath : [envFilePath]),
+        ...envFilePaths,
         join(__dirname, `../envs/.env.${process.env.NODE_ENV}`),
         join(__dirname, '../envs/.env'),
       ],

@@ -7,6 +7,7 @@
     "#config": "./dist/config/index.js",
     "#seedwork/domain": "./dist/@seedwork/domain/index.js",
     "#seedwork/application": "./dist/@seedwork/application/index.js",
+    "#seedwork/infra": "./dist/@seedwork/infra/index.js",
     "#seedwork/*": "./dist/@seedwork/*.js",
     "#category/domain": "./dist/category/domain/index.js",
     "#category/application": "./dist/category/application/index.js",
@@ -16,6 +17,7 @@
   "exports": {
     "./@seedwork/application": "./dist/@seedwork/application/index.js",
     "./@seedwork/domain": "./dist/@seedwork/domain/index.js",
+    "./@seedwork/infra": "./dist/@seedwork/infra/index.js",
     "./category/application": "./dist/category/application/index.js",
     "./category/domain": "./dist/category/domain/index.js",
     "./category/infra": "./dist/category/infra/index.js"
@@ -27,6 +29,9 @@
       ],
       "@seedwork/domain": [
         "./dist/@seedwork/domain/index.d.ts"
+      ],
+      "@seedwork/infra": [
+        "./dist/@seedwork/infra/index.d.ts"
       ],
       "category/application": [
         "./dist/category/application/index.d.ts"
