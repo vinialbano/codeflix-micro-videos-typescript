@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    container_name: "codeflix-micro-videos-typescript"
+    command: "./.docker/start.sh"
+    ports:
+      - 3000:3000
+
+    volumes:
+      - .:/home/node/app
+      - ./package.json:/home/node/package.json
+      - ./package-lock.json:/home/node/package-lock.json
+      # this is a workaround to prevent host node_modules from accidently getting mounted in container
+      # in case you want to use node/npm both outside container for test/lint etc. and also inside container
+      # this will overwrite the default node_modules dir in container so it won't conflict with our
+      # /home/node/node_modules location.
+      - notused:/home/node/app/node_modules
+
+volumes:
+  notused:
