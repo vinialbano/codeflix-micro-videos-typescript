@@ -41,7 +41,9 @@
 			},
 			"extensions": [
 				"firsttris.vscode-jest-runner",
-				"Orta.vscode-jest"
+				"Orta.vscode-jest",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}	
 	},
