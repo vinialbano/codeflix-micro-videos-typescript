@@ -1,7 +1,4 @@
-import {
-  EntityValidationError,
-  ValidationError,
-} from "../../../shared/domain/validators/validation.error";
+import { EntityValidationError } from "../../../shared/domain/validators/validation.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
 import { CategoryValidator } from "../category.validator";
