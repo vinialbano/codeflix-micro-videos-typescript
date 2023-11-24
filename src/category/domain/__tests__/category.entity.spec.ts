@@ -1,10 +1,10 @@
-import { EntityValidationError } from "../../../shared/domain/validators/validation.error";
+import {
+  EntityValidationError,
+  ValidationError,
+} from "../../../shared/domain/validators/validation.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
-import {
-  CategoryValidator,
-  CategoryValidatorFactory,
-} from "../category.validator";
+import { CategoryValidator } from "../category.validator";
 
 describe("Category Unit Tests", () => {
   describe("constructor()", () => {
@@ -230,7 +230,7 @@ describe("Category Unit Tests", () => {
       ({ given, expected }) => {
         const createCategory = () => Category.create(given as any);
         expect(createCategory).toThrow(EntityValidationError);
-        expect(createCategory).toContainValidationErrors(expected);
+        expect(createCategory).toThrowWithErrorFields(expected);
       }
     );
   });
@@ -322,7 +322,7 @@ describe("Category Unit Tests", () => {
         const category = Category.create({ name: "Movie" });
         const changeName = () => category.changeName(given as any);
         expect(changeName).toThrow(EntityValidationError);
-        expect(changeName).toContainValidationErrors(expected);
+        expect(changeName).toThrowWithErrorFields(expected);
       }
     );
   });
@@ -361,12 +361,12 @@ describe("Category Unit Tests", () => {
     ];
     it.each(invalidDescriptions)(
       "should throw an error with $given",
-      ({ given, expected }) => {
+      async ({ given, expected }) => {
         const category = Category.create({ name: "Movie" });
         const changeDescription = () =>
           category.changeDescription(given as any);
         expect(changeDescription).toThrow(EntityValidationError);
-        expect(changeDescription).toContainValidationErrors(expected);
+        expect(changeDescription).toThrowWithErrorFields(expected);
       }
     );
   });
