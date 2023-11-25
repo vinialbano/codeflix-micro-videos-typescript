@@ -1,4 +1,4 @@
-import { EntityValidationError } from "../validation.error";
+import { EntityValidationError } from "../../errors/validation.error";
 
 describe("EntityValidationError", () => {
   describe("constructor", () => {

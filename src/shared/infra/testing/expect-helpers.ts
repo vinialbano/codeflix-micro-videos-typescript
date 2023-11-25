@@ -8,7 +8,7 @@ import {
   RECEIVED_COLOR as receivedColor,
   stringify,
 } from "jest-matcher-utils";
-import { ValidationError } from "../../domain/validators/validation.error";
+import { ValidationError } from "../../domain/errors/validation.error";
 import { ErrorFields } from "../../domain/validators/validator-fields";
 
 expect.extend({

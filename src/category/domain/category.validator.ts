@@ -3,11 +3,8 @@ import {
   IsDate,
   IsInstance,
   IsNotEmpty,
-  IsNotIn,
-  IsOptional,
   IsString,
   MaxLength,
-  NotEquals,
 } from "class-validator";
 import { Category } from "./category.entity";
 import { ClassValidatorFields } from "../../shared/domain/validators/class-validator-fields";
