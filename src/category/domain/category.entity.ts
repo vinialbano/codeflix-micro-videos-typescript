@@ -3,6 +3,7 @@ import { UUID } from "../../shared/domain/value-objects/uuid.vo";
 import { CategoryValidatorFactory } from "./category.validator";
 import { includeIfDefined } from "../../shared/utils";
 import { Entity } from "../../shared/domain/entity";
+import { CategoryFakeBuilder } from "./category-fake.builder";
 
 export type CategoryConstructorProps = {
   categoryId?: UUID;
@@ -85,5 +86,9 @@ export class Category extends Entity {
       isActive: this.isActive,
       createdAt: this.createdAt,
     };
+  }
+
+  static fake() {
+    return CategoryFakeBuilder;
   }
 }

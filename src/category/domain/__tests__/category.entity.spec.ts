@@ -1,5 +1,6 @@
 import { EntityValidationError } from "../../../shared/domain/errors/validation.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
+import { CategoryFakeBuilder } from "../category-fake.builder";
 import { Category } from "../category.entity";
 import { CategoryValidator } from "../category.validator";
 
@@ -398,6 +399,15 @@ describe("Category Unit Tests", () => {
         isActive: true,
         createdAt: category.createdAt,
       });
+    });
+  });
+
+  describe("fake()", () => {
+    it("should return a FakeCategoryBuilder", () => {
+      const fakeCategoryBuilder = Category.fake();
+      expect(fakeCategoryBuilder).toBeDefined();
+      expect(fakeCategoryBuilder.aCategory).toBeDefined();
+      expect(fakeCategoryBuilder.someCategories).toBeDefined();
     });
   });
 });
