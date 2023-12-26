@@ -1,6 +1,5 @@
 import { EntityValidationError } from "../../../shared/domain/errors/validation.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
-import { CategoryFakeBuilder } from "../category-fake.builder";
 import { Category } from "../category.entity";
 import { CategoryValidator } from "../category.validator";
 
