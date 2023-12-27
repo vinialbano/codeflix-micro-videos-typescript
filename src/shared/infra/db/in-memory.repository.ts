@@ -28,12 +28,12 @@ export abstract class InMemoryRepository<
     this.items[indexFound] = entity;
   }
 
-  async delete(entity: E): Promise<void> {
+  async delete(entityId: EntityId): Promise<void> {
     const indexFound = this.items.findIndex((item) =>
-      item.entityId.equals(entity.entityId)
+      item.entityId.equals(entityId)
     );
     if (indexFound === -1) {
-      throw new NotFoundError(entity.entityId, this.getEntity());
+      throw new NotFoundError(entityId, this.getEntity());
     }
     this.items.splice(indexFound, 1);
   }

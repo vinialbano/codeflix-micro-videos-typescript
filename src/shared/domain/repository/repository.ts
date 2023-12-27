@@ -7,7 +7,7 @@ export interface Repository<E extends Entity, EntityId extends ValueObject> {
   insert(entity: E): Promise<void>;
   insertMany(entities: E[]): Promise<void>;
   update(entity: E): Promise<void>;
-  delete(entity: E): Promise<void>;
+  delete(entityId: EntityId): Promise<void>;
 
   findById(entityId: EntityId): Promise<E | null>;
   findAll(): Promise<E[]>;

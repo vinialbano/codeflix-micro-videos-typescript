@@ -42,15 +42,14 @@ export class CategorySequelizeRepository implements CategoryRepository {
     });
   }
 
-  async delete(entity: Category): Promise<void> {
-    const id = entity.categoryId.id;
-    const model = await this._get(id);
+  async delete(id: UUID): Promise<void> {
+    const model = await this._get(id.id);
     if (!model) {
       throw new NotFoundError(id, this.getEntity());
     }
     await this.categoryModel.destroy({
       where: {
-        categoryId: id,
+        categoryId: id.id,
       },
     });
   }

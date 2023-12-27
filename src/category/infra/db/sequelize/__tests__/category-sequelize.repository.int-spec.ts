@@ -10,6 +10,7 @@ import {
   CategorySearchResult,
 } from "../../../../domain/category.repository";
 import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
+import { UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
 
 describe("CategorySequelizeRepository Integration Tests", () => {
   setupSequelize({
@@ -68,9 +69,9 @@ describe("CategorySequelizeRepository Integration Tests", () => {
 
   describe("delete()", () => {
     it("should throw an error if the category does not exist", async () => {
-      const category = Category.fake().aCategory().build();
-      await expect(repository.delete(category)).rejects.toThrow(
-        new NotFoundError(category.categoryId.id, Category)
+      const id = new UUID()
+      await expect(repository.delete(id)).rejects.toThrow(
+        new NotFoundError(id, Category)
       );
     });
 
@@ -78,7 +79,7 @@ describe("CategorySequelizeRepository Integration Tests", () => {
       const category = Category.fake().aCategory().build();
       await repository.insert(category);
 
-      await repository.delete(category);
+      await repository.delete(category.categoryId);
       const model = await CategoryModel.findByPk(category.categoryId.id);
       expect(model).toBeNull();
     });

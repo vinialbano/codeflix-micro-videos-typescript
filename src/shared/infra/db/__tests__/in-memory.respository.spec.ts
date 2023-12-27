@@ -73,16 +73,17 @@ describe("InMemoryRepository Unit Tests", () => {
 
   describe("delete()", () => {
     it("should delete an entity", async () => {
-      const entity = new StubEntity(new UUID(), "Stub Entity");
+      const id = new UUID()
+      const entity = new StubEntity(id, "Stub Entity");
       await repository.insert(entity);
-      await repository.delete(entity);
+      await repository.delete(id);
       expect(repository.items).toHaveLength(0);
     });
 
     it("should throw an error if the entity is not found", async () => {
-      const entity = new StubEntity(new UUID(), "Stub Entity");
-      await expect(repository.delete(entity)).rejects.toThrow(
-        new NotFoundError(entity.entityId, StubEntity)
+      const id = new UUID();
+      await expect(repository.delete(id)).rejects.toThrow(
+        new NotFoundError(id, StubEntity)
       );
     });
   });
