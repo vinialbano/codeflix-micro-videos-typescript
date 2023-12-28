@@ -1,8 +1,8 @@
-import { UseCase } from "../../../shared/application/use-case";
-import { NotFoundError } from "../../../shared/domain/errors/not-found.error";
-import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
-import { Category } from "../../domain/category.entity";
-import { CategoryRepository } from "../../domain/category.repository";
+import { UseCase } from "../../../../shared/application/use-case";
+import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
+import { UUID } from "../../../../shared/domain/value-objects/uuid.vo";
+import { Category } from "../../../domain/category.entity";
+import { CategoryRepository } from "../../../domain/category.repository";
 
 export class DeleteCategoryUseCase
   implements UseCase<DeleteCategoryInput, DeleteCategoryOutput>

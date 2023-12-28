@@ -14,6 +14,4 @@ export abstract class ValueObject {
   public toString(): string {
     return JSON.stringify(this);
   }
-
-  protected abstract validate(): never | void;
 }

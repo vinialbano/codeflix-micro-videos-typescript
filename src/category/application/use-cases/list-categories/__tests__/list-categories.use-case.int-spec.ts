@@ -4,7 +4,7 @@ import { Category } from "../../../../domain/category.entity";
 import { CategoryRepository } from "../../../../domain/category.repository";
 import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category-sequelize.repository";
 import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
-import { ListCategoriesUseCase } from "../../list-categories.use-case";
+import { ListCategoriesUseCase } from "../list-categories.use-case";
 import { CategoryOutputMapper } from "../../shared/category-output";
 
 describe("ListCategoriesUseCase Integration Tests", () => {

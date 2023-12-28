@@ -1,10 +1,13 @@
 import exp from "constants";
-import { InvalidUUIDError, UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
+import {
+  InvalidUUIDError,
+  UUID,
+} from "../../../../../shared/domain/value-objects/uuid.vo";
 import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
 import { CategoryRepository } from "../../../../domain/category.repository";
 import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category-sequelize.repository";
 import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
-import { DeleteCategoryUseCase } from "../../delete-category.use-case";
+import { DeleteCategoryUseCase } from "../delete-category.use-case";
 import { Category } from "../../../../domain/category.entity";
 import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
 
@@ -32,7 +35,7 @@ describe("DeleteCategoryUseCase Integration Tests", () => {
       await expect(useCase.execute(input)).rejects.toThrow(
         new NotFoundError(input.id, Category)
       );
-    })
+    });
 
     it("should delete an existing category", async () => {
       const category = Category.fake().aCategory().build();

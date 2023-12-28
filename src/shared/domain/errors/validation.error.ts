@@ -2,7 +2,7 @@ import { ErrorFields } from "../validators/validator-fields";
 
 export class ValidationError extends Error {
   constructor(
-    public readonly errors: ErrorFields,
+    public readonly errors: ErrorFields[],
     message = "Validation error"
   ) {
     super(message);
@@ -16,7 +16,7 @@ export class ValidationError extends Error {
 
 export class EntityValidationError extends ValidationError {
   constructor(
-    public readonly errors: ErrorFields,
+    public readonly errors: ErrorFields[],
     message = "Entity validation error"
   ) {
     super(errors, message);

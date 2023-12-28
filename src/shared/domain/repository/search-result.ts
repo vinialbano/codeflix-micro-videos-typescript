@@ -1,7 +1,5 @@
-import { ValidationError } from "../errors/validation.error";
 import { Entity } from "../entity";
 import { ValueObject } from "../value-objects/value-object";
-import { SearchResultValidatorFactory } from "./search-result.validator";
 
 type SearchResultProps<E extends Entity> = {
   items: E[];
@@ -22,15 +20,6 @@ export class SearchResult<E extends Entity = Entity> extends ValueObject {
     this.total = props.total;
     this.currentPage = props.currentPage;
     this.limit = props.limit;
-    this.validate();
-  }
-
-  protected validate(): void {
-    const validator = SearchResultValidatorFactory.create();
-    const isValid = validator.validate(this);
-    if (!isValid) {
-      throw new ValidationError(validator.errors!);
-    }
   }
 
   get lastPage(): number {

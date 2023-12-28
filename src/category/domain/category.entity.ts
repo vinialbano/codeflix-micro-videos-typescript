@@ -1,4 +1,3 @@
-import { EntityValidationError } from "../../shared/domain/errors/validation.error";
 import { UUID } from "../../shared/domain/value-objects/uuid.vo";
 import { CategoryValidatorFactory } from "./category.validator";
 import { includeIfDefined } from "../../shared/utils";
@@ -43,17 +42,14 @@ export class Category extends Entity {
       ...includeIfDefined(props.description, "description"),
       ...includeIfDefined(props.isActive, "isActive"),
     });
-    Category.validate(category);
+    category.validate(["name"]);
 
     return category;
   }
 
-  static validate(entity: Category) {
+  validate(fields?: string[]) {
     const validator = CategoryValidatorFactory.create();
-    const isValid = validator.validate(entity);
-    if (!isValid) {
-      throw new EntityValidationError(validator.errors!);
-    }
+    return validator.validate(this.notification, this, fields);
   }
 
   get entityId() {
@@ -62,12 +58,11 @@ export class Category extends Entity {
 
   changeName(name: string) {
     this.name = name;
-    Category.validate(this);
+    this.validate(["name"]);
   }
 
   changeDescription(description: string | null) {
     this.description = description;
-    Category.validate(this);
   }
 
   activate() {

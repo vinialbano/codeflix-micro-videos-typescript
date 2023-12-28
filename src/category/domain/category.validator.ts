@@ -8,37 +8,21 @@ import {
 } from "class-validator";
 import { Category } from "./category.entity";
 import { ClassValidatorFields } from "../../shared/domain/validators/class-validator-fields";
-import { UUID } from "../../shared/domain/value-objects/uuid.vo";
-import { IsNullable } from "../../shared/domain/validators/class-validator-custom-decorators";
+import { Notification } from "../../shared/domain/validators/notification";
 
 class CategoryRules {
-  @IsInstance(UUID)
-  categoryId!: UUID;
-
-  @MaxLength(255)
-  @IsString()
-  @IsNotEmpty()
+  @MaxLength(255, { groups: ["name"] })
   name!: string;
-
-  @IsString()
-  @IsNullable()
-  description!: string | null;
-
-  @IsBoolean()
-  isActive!: boolean;
-
-  @IsDate()
-  createdAt!: Date;
 
   constructor(props: Category) {
     Object.assign(this, { ...props });
   }
 }
 
-export class CategoryValidator extends ClassValidatorFields<CategoryRules> {
-  validate(entity: Category) {
-    const rules = new CategoryRules(entity);
-    return super.validate(rules);
+export class CategoryValidator extends ClassValidatorFields {
+  validate(notification: Notification, data: any, fields?: string[]): boolean {
+    const newFields = fields?.length ? fields : ["name"];
+    return super.validate(notification, new CategoryRules(data), newFields);
   }
 }
 

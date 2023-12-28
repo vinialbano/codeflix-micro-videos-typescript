@@ -2,7 +2,7 @@ import { SortDirection } from "../../../../../shared/domain/repository/search-pa
 import { Category } from "../../../../domain/category.entity";
 import { CategoryRepository } from "../../../../domain/category.repository";
 import { CategoryInMemoryRepository } from "../../../../infra/db/in-memory/category-in-memory.repository";
-import { ListCategoriesUseCase } from "../../list-categories.use-case";
+import { ListCategoriesUseCase } from "../list-categories.use-case";
 import { CategoryOutputMapper } from "../../shared/category-output";
 
 describe("ListCategoriesUseCase Unit Tests", () => {

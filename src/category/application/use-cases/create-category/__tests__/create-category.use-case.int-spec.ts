@@ -8,7 +8,7 @@ import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
 import {
   CreateCategoryInput,
   CreateCategoryUseCase,
-} from "../../create-category.use-case";
+} from "../create-category.use-case";
 
 describe("CreateCategoryUseCase Integration Tests", () => {
   let useCase: CreateCategoryUseCase;

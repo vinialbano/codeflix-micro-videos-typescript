@@ -5,6 +5,9 @@ declare global {
     interface Matchers<R> {
       toContainErrorFields(expected: ErrorFields): R;
       toThrowWithErrorFields(expected: ErrorFields): R;
+      toContainNotificationErrorMessages: (
+        expected: Array<string | { [key: string]: string[] }>
+      ) => R;
     }
   }
 }

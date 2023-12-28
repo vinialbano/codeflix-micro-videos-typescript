@@ -1,4 +1,3 @@
-import { EntityValidationError } from "../../../shared/domain/errors/validation.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
 import { CategoryValidator } from "../category.validator";
@@ -162,74 +161,15 @@ describe("Category Unit Tests", () => {
       }
     );
 
-    const invalidProps = [
-      {
-        given: { name: null },
-        expected: {
-          name: [
-            "name should not be empty",
-            "name must be a string",
-            "name must be shorter than or equal to 255 characters",
-          ],
-        },
-      },
-      {
-        given: { name: 1 },
-        expected: {
-          name: [
-            "name must be a string",
-            "name must be shorter than or equal to 255 characters",
-          ],
-        },
-      },
-      {
-        given: { name: "" },
-        expected: {
-          name: ["name should not be empty"],
-        },
-      },
-      {
-        given: { name: "a".repeat(256) },
-        expected: {
+    it("should notify an error with name", () => {
+      const category = Category.create({ name: "a".repeat(256) });
+      expect(category.notification.hasErrors()).toBe(true);
+      expect(category.notification).toContainNotificationErrorMessages([
+        {
           name: ["name must be shorter than or equal to 255 characters"],
         },
-      },
-      {
-        given: {
-          name: "Movie",
-          categoryId: 1,
-        },
-        expected: {
-          categoryId: ["categoryId must be an instance of UUID"],
-        },
-      },
-      {
-        given: {
-          name: "Movie",
-          description: 1,
-        },
-        expected: {
-          description: ["description must be a string"],
-        },
-      },
-      {
-        given: {
-          name: "Movie",
-          isActive: 1,
-        },
-        expected: {
-          isActive: ["isActive must be a boolean value"],
-        },
-      },
-    ];
-    it.each(invalidProps)(
-      "should throw an error with $given",
-      ({ given, expected }) => {
-        const createCategory = () => Category.create(given as any);
-        expect(createCategory).toThrow(EntityValidationError);
-        expect(createCategory).toThrowWithErrorFields(expected);
-      }
-    );
+      ]);
+    });
   });
 
   describe("validate()", () => {
@@ -238,17 +178,12 @@ describe("Category Unit Tests", () => {
         .spyOn(CategoryValidator.prototype, "validate")
         .mockReturnValue(true);
       const category = new Category({ name: "Movie" });
-      Category.validate(category);
-      expect(validateSpy).toHaveBeenCalledWith(category);
-      validateSpy.mockRestore();
-    });
-
-    it("should throw an error if the category is invalid", () => {
-      const validateSpy = jest
-        .spyOn(CategoryValidator.prototype, "validate")
-        .mockReturnValue(false);
-      const category = new Category({ name: "Movie" });
-      expect(() => Category.validate(category)).toThrow(EntityValidationError);
+      category.validate();
+      expect(validateSpy).toHaveBeenCalledWith(
+        category.notification,
+        category,
+        undefined
+      );
       validateSpy.mockRestore();
     });
   });
@@ -280,48 +215,16 @@ describe("Category Unit Tests", () => {
       }
     );
 
-    const invalidNames = [
-      {
-        given: null,
-        expected: {
-          name: [
-            "name should not be empty",
-            "name must be a string",
-            "name must be shorter than or equal to 255 characters",
-          ],
-        },
-      },
-      {
-        given: 1,
-        expected: {
-          name: [
-            "name must be a string",
-            "name must be shorter than or equal to 255 characters",
-          ],
-        },
-      },
-      {
-        given: "",
-        expected: {
-          name: ["name should not be empty"],
-        },
-      },
-      {
-        given: "a".repeat(256),
-        expected: {
+    it("should notify an error with name", () => {
+      const category = Category.create({ name: "Movie" });
+      category.changeName("a".repeat(256));
+      expect(category.notification.hasErrors()).toBe(true);
+      expect(category.notification).toContainNotificationErrorMessages([
+        {
           name: ["name must be shorter than or equal to 255 characters"],
         },
-      },
-    ];
-    it.each(invalidNames)(
-      "should throw an error with $given",
-      ({ given, expected }) => {
-        const category = Category.create({ name: "Movie" });
-        const changeName = () => category.changeName(given as any);
-        expect(changeName).toThrow(EntityValidationError);
-        expect(changeName).toThrowWithErrorFields(expected);
-      }
-    );
+      ]);
+    });
   });
 
   describe("changeDescription()", () => {
@@ -345,25 +248,6 @@ describe("Category Unit Tests", () => {
         const category = Category.create({ name: "Movie" });
         category.changeDescription(given);
         expect(category.description).toBe(expected);
-      }
-    );
-
-    const invalidDescriptions = [
-      {
-        given: 1,
-        expected: {
-          description: ["description must be a string"],
-        },
-      },
-    ];
-    it.each(invalidDescriptions)(
-      "should throw an error with $given",
-      async ({ given, expected }) => {
-        const category = Category.create({ name: "Movie" });
-        const changeDescription = () =>
-          category.changeDescription(given as any);
-        expect(changeDescription).toThrow(EntityValidationError);
-        expect(changeDescription).toThrowWithErrorFields(expected);
       }
     );
   });
