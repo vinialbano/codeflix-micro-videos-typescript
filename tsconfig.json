@@ -24,6 +24,11 @@
       "es2022"
     ],
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "paths": {
+      "@core/*": [
+        "./src/core/*"
+      ]
+    },
   }
 }

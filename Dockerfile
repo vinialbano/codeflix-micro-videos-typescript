@@ -1,6 +1,6 @@
 FROM node:20.9.0-slim
 
-RUN npm i -g npm@latest
+RUN npm i -g npm@latest @nestjs/cli@10.3.0
 
 USER node
 

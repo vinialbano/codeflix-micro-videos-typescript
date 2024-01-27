@@ -10,7 +10,6 @@ services:
     command: "./.docker/start.sh"
     ports:
       - 3000:3000
-
     volumes:
       - .:/home/node/app
       - ./package.json:/home/node/package.json
@@ -20,6 +19,15 @@ services:
       # this will overwrite the default node_modules dir in container so it won't conflict with our
       # /home/node/node_modules location.
       - notused:/home/node/app/node_modules
+  db:
+    image: arm64v8/mysql:8.0.36
+    environment:
+      - MYSQL_DATABASE=micro_videos
+      - MYSQL_ROOT_PASSWORD=root
+    tmpfs:
+      - /var/lib/mysql
+    security_opt:
+      - seccomp:unconfined
 
 volumes:
   notused:
