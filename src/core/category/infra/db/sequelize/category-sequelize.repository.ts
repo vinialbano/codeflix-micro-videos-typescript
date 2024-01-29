@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, literal } from 'sequelize';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { UUID } from '../../../../shared/domain/value-objects/uuid.vo';
 import { Category } from '../../../domain/category.entity';
@@ -9,9 +9,20 @@ import {
 } from '../../../domain/category.repository';
 import { CategoryModel } from './category.model';
 import { CategoryModelMapper } from './category-model.mapper';
+import { SortDirection } from '@core/shared/domain/repository/search-params';
+import { Literal } from 'sequelize/lib/utils';
 
 export class CategorySequelizeRepository implements CategoryRepository {
   sortableFields: string[] = ['name', 'createdAt'];
+  orderBy: Record<
+    string,
+    Record<string, (sortDirection: SortDirection) => Literal>
+  > = {
+    mysql: {
+      name: (sortDirection: SortDirection) =>
+        literal(`binary name ${sortDirection}`),
+    },
+  };
 
   constructor(private categoryModel: typeof CategoryModel) {}
 
@@ -76,7 +87,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
       }),
       ...(props.sort && this.sortableFields.includes(props.sort)
         ? {
-            order: [[props.sort, props.sortDirection ?? 'asc']],
+            order: this.formatSort(props.sort, props.sortDirection ?? 'asc'),
           }
         : { order: [['createdAt', 'desc']] }),
       offset,
@@ -93,6 +104,17 @@ export class CategorySequelizeRepository implements CategoryRepository {
 
   private async _get(id: string): Promise<CategoryModel | null> {
     return await this.categoryModel.findByPk(id);
+  }
+
+  private formatSort(
+    sort: string,
+    sortDirection: SortDirection,
+  ): Literal | [string, string][] {
+    const dialect = this.categoryModel.sequelize!.getDialect();
+    if (this.orderBy[dialect]?.[sort]) {
+      return this.orderBy[dialect]![sort]!(sortDirection);
+    }
+    return [[sort, sortDirection]];
   }
 
   getEntity(): new (...args: any[]) => Category {

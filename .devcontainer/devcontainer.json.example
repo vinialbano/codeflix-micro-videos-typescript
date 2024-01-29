@@ -34,7 +34,8 @@
 				"firsttris.vscode-jest-runner",
 				"Orta.vscode-jest",
 				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode"
+				"esbenp.prettier-vscode",
+				"humao.rest-client"
 			]
 		}
 	},

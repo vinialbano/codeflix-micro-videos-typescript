@@ -1,6 +1,6 @@
 import { ConfigModule, CONFIG_DB_SCHEMA } from '../config.module';
 import * as Joi from 'joi';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { join } from 'path';
 
 function expectValidate(schema: Joi.ObjectSchema, value: any) {
