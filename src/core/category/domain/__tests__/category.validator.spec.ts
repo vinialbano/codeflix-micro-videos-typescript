@@ -59,18 +59,15 @@ describe('CategoryValidator', () => {
     },
   ];
 
-  it.each(validCategories)(
-    'should not include errors with $category',
-    (category) => {
-      const categoryValidator = new CategoryValidator();
-      const notification = new Notification();
-      const isValid = categoryValidator.validate(
-        notification,
-        category as Category,
-        undefined,
-      );
-      expect(isValid).toBe(true);
-      expect(notification.hasErrors()).toBe(false);
-    },
-  );
+  it.each(validCategories)('should not include errors with %p', (category) => {
+    const categoryValidator = new CategoryValidator();
+    const notification = new Notification();
+    const isValid = categoryValidator.validate(
+      notification,
+      category as Category,
+      undefined,
+    );
+    expect(isValid).toBe(true);
+    expect(notification.hasErrors()).toBe(false);
+  });
 });
