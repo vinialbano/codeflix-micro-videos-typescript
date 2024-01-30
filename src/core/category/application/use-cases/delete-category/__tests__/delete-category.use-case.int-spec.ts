@@ -1,14 +1,10 @@
-import exp from 'constants';
-import {
-  InvalidUUIDError,
-  UUID,
-} from '../../../../../shared/domain/value-objects/uuid.vo';
+import { InvalidUUIDError } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { CategoryRepository } from '../../../../domain/category.repository';
 import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
 import { DeleteCategoryUseCase } from '../delete-category.use-case';
-import { Category } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 
 describe('DeleteCategoryUseCase Integration Tests', () => {
@@ -31,7 +27,7 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
     });
 
     it('should throw an error if category does not exist', async () => {
-      const input = { id: new UUID().id };
+      const input = { id: new CategoryId().id };
       await expect(useCase.execute(input)).rejects.toThrow(
         new NotFoundError(input.id, Category),
       );

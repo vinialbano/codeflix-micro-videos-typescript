@@ -1,18 +1,17 @@
 import { Chance } from 'chance';
-import { UUID } from '../../shared/domain/value-objects/uuid.vo';
-import { Category } from './category.entity';
+import { Category, CategoryId } from './category.aggregate';
 
 type PropOrFactory<T> = T | ((i: number) => T);
 
 export class CategoryFakeBuilder<TBuild = any> {
-  private _categoryId: PropOrFactory<UUID> | undefined = undefined;
+  private _categoryId: PropOrFactory<CategoryId> | undefined = undefined;
 
-  private _name: PropOrFactory<string> = (_index) => this.chance.word();
+  private _name: PropOrFactory<string> = () => this.chance.word();
 
-  private _description: PropOrFactory<string | null> = (_index) =>
+  private _description: PropOrFactory<string | null> = () =>
     this.chance.sentence();
 
-  private _isActive: PropOrFactory<boolean> = (_index) => true;
+  private _isActive: PropOrFactory<boolean> = () => true;
 
   private _createdAt: PropOrFactory<Date> | undefined = undefined;
 
@@ -33,7 +32,7 @@ export class CategoryFakeBuilder<TBuild = any> {
     this.chance = Chance();
   }
 
-  withUUID(valueOrFactory: PropOrFactory<UUID>) {
+  withCategoryId(valueOrFactory: PropOrFactory<CategoryId>) {
     this._categoryId = valueOrFactory;
     return this;
   }

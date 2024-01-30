@@ -3,8 +3,7 @@ import { CreateCategoryFixture } from '../../src/nest-modules/categories-module/
 import { CategoryRepository } from '@core/category/domain/category.repository';
 import { CATEGORY_PROVIDERS } from '../../src/nest-modules/categories-module/categories.providers';
 import { startApp } from '../helpers';
-import { Category } from '@core/category/domain/category.entity';
-import { UUID } from '@core/shared/domain/value-objects/uuid.vo';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
 import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
 import { CategoryOutputMapper } from '@core/category/application/use-cases/shared/category-output';
 import { instanceToPlain } from 'class-transformer';
@@ -80,7 +79,7 @@ describe('CategoriesController (e2e)', () => {
 
           const id = res.body.data.id;
           const categoryCreated = (await categoryRepository.findById(
-            new UUID(id),
+            new CategoryId(id),
           )) as Category;
           expect(categoryCreated).toBeDefined();
 

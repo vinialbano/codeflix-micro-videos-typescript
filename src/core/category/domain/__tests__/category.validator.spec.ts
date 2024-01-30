@@ -1,6 +1,5 @@
 import { Notification } from '../../../shared/domain/validators/notification';
-import { UUID } from '../../../shared/domain/value-objects/uuid.vo';
-import { Category, CategoryConstructorProps } from '../category.entity';
+import { Category, CategoryId } from '../category.aggregate';
 import { CategoryValidator } from '../category.validator';
 
 describe('CategoryValidator', () => {
@@ -12,7 +11,7 @@ describe('CategoryValidator', () => {
           description: null,
           isActive: true,
           createdAt: new Date(),
-          categoryId: new UUID(),
+          categoryId: new CategoryId(),
         },
         expected: {
           name: ['name must be shorter than or equal to 255 characters'],
@@ -42,21 +41,21 @@ describe('CategoryValidator', () => {
       description: null,
       isActive: true,
       createdAt: new Date(),
-      categoryId: new UUID(),
+      categoryId: new CategoryId(),
     },
     {
       name: 'Movie',
       description: 'A movie',
       isActive: true,
       createdAt: new Date(),
-      categoryId: new UUID(),
+      categoryId: new CategoryId(),
     },
     {
       name: 'Movie',
       description: 'A movie',
       isActive: false,
       createdAt: new Date(),
-      categoryId: new UUID(),
+      categoryId: new CategoryId(),
     },
   ];
 

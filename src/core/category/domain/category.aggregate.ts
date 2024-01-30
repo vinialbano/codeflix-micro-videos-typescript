@@ -1,11 +1,11 @@
 import { UUID } from '../../shared/domain/value-objects/uuid.vo';
 import { CategoryValidatorFactory } from './category.validator';
 import { includeIfDefined } from '../../shared/utils';
-import { Entity } from '../../shared/domain/entity';
 import { CategoryFakeBuilder } from './category-fake.builder';
+import { AggregateRoot } from '@core/shared/domain/aggregate-root';
 
 export type CategoryConstructorProps = {
-  categoryId?: UUID;
+  categoryId?: CategoryId;
   name: string;
   description?: string | null;
   isActive?: boolean;
@@ -13,14 +13,16 @@ export type CategoryConstructorProps = {
 };
 
 export type CategoryCreateCommandProps = {
-  categoryId?: UUID;
+  categoryId?: CategoryId;
   name: string;
   description?: string | null;
   isActive?: boolean;
 };
 
-export class Category extends Entity {
-  categoryId: UUID;
+export class CategoryId extends UUID {}
+
+export class Category extends AggregateRoot {
+  categoryId: CategoryId;
   name: string;
   description: string | null;
   isActive: boolean;
@@ -28,7 +30,7 @@ export class Category extends Entity {
 
   constructor(props: CategoryConstructorProps) {
     super();
-    this.categoryId = props.categoryId ?? new UUID();
+    this.categoryId = props.categoryId ?? new CategoryId();
     this.name = props.name;
     this.description = props.description ?? null;
     this.isActive = props.isActive ?? true;

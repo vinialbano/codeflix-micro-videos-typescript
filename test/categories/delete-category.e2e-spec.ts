@@ -2,8 +2,7 @@ import request from 'supertest';
 import { CategoryRepository } from '@core/category/domain/category.repository';
 import { CATEGORY_PROVIDERS } from '../../src/nest-modules/categories-module/categories.providers';
 import { startApp } from '../helpers';
-import { Category } from '@core/category/domain/category.entity';
-import { UUID } from '@core/shared/domain/value-objects/uuid.vo';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
 
 describe('CategoriesController (e2e)', () => {
   const appHelper = startApp();
@@ -30,7 +29,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     it('should return a response error with 404 status code when entity is not found', async () => {
-      const id = new UUID().toString();
+      const id = new CategoryId().toString();
       const res = await request(appHelper.app.getHttpServer())
         .delete(`/categories/${id}`)
         .expect(404)

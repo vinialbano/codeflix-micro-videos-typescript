@@ -6,8 +6,7 @@ import {
 import { CategoryRepository } from '@core/category/domain/category.repository';
 import { CATEGORY_PROVIDERS } from '../../src/nest-modules/categories-module/categories.providers';
 import { startApp } from '../helpers';
-import { Category } from '@core/category/domain/category.entity';
-import { UUID } from '@core/shared/domain/value-objects/uuid.vo';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
 import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
 import { CategoryOutputMapper } from '@core/category/application/use-cases/shared/category-output';
 import { instanceToPlain } from 'class-transformer';
@@ -15,7 +14,7 @@ import { instanceToPlain } from 'class-transformer';
 describe('CategoriesController (e2e)', () => {
   const appHelper = startApp();
   let categoryRepository: CategoryRepository;
-  const id = new UUID();
+  const id = new CategoryId();
 
   beforeEach(async () => {
     categoryRepository = appHelper.app.get<CategoryRepository>(
@@ -63,7 +62,7 @@ describe('CategoriesController (e2e)', () => {
       }));
 
       beforeEach(async () => {
-        const category = Category.fake().aCategory().withUUID(id).build();
+        const category = Category.fake().aCategory().withCategoryId(id).build();
         await categoryRepository.insert(category);
       });
 
@@ -90,7 +89,7 @@ describe('CategoriesController (e2e)', () => {
       }));
 
       beforeEach(async () => {
-        const category = Category.fake().aCategory().withUUID(id).build();
+        const category = Category.fake().aCategory().withCategoryId(id).build();
         await categoryRepository.insert(category);
       });
 
@@ -112,7 +111,7 @@ describe('CategoriesController (e2e)', () => {
       const arrange = UpdateCategoryFixture.arrangeForUpdate();
 
       beforeEach(async () => {
-        const category = Category.fake().aCategory().withUUID(id).build();
+        const category = Category.fake().aCategory().withCategoryId(id).build();
         await categoryRepository.insert(category);
       });
 

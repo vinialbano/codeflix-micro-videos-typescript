@@ -1,11 +1,9 @@
-import exp from 'constants';
-import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { CategoryRepository } from '../../../../domain/category.repository';
 import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
 import { UpdateCategoryUseCase } from '../update-category.use-case';
-import { Category } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 
 describe('UpdateCategoryUseCase Integration Tests', () => {
   let useCase: UpdateCategoryUseCase;
@@ -35,7 +33,9 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
         id: category.categoryId.id,
         ...input,
       });
-      const entity = await categoryRepository.findById(new UUID(output.id));
+      const entity = await categoryRepository.findById(
+        new CategoryId(output.id),
+      );
       expect(output).toStrictEqual({
         id: entity!.categoryId.id,
         name: input.name ?? entity!.name,

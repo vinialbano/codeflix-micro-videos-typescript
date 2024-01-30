@@ -1,5 +1,4 @@
-import { UUID } from '../../../shared/domain/value-objects/uuid.vo';
-import { Category } from '../category.entity';
+import { Category, CategoryId } from '../category.aggregate';
 import { CategoryValidator } from '../category.validator';
 
 describe('Category Unit Tests', () => {
@@ -8,7 +7,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie' },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: true,
@@ -18,7 +17,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', description: 'Movie category' },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
@@ -28,7 +27,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', description: null },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: true,
@@ -38,7 +37,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', isActive: false },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: false,
@@ -51,7 +50,7 @@ describe('Category Unit Tests', () => {
           createdAt: new Date('2021-01-01T00:00:00.000Z'),
         },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: true,
@@ -60,14 +59,14 @@ describe('Category Unit Tests', () => {
       },
       {
         given: {
-          categoryId: new UUID('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
+          categoryId: new CategoryId('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
           createdAt: new Date('2021-01-01T00:00:00.000Z'),
         },
         expected: {
-          categoryId: new UUID('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
+          categoryId: new CategoryId('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
@@ -81,7 +80,7 @@ describe('Category Unit Tests', () => {
         const category = new Category(given);
 
         expect(category).toBeDefined();
-        expect(category.categoryId).toBeInstanceOf(UUID);
+        expect(category.categoryId).toBeInstanceOf(CategoryId);
         expect(category.categoryId).toEqual(expected.categoryId);
         expect(category.name).toBe(expected.name);
         expect(category.description).toBe(expected.description);
@@ -97,7 +96,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie' },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: true,
@@ -106,7 +105,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', description: 'Movie category' },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
@@ -115,7 +114,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', description: null },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: true,
@@ -124,7 +123,7 @@ describe('Category Unit Tests', () => {
       {
         given: { name: 'Movie', isActive: false },
         expected: {
-          categoryId: expect.any(UUID),
+          categoryId: expect.any(CategoryId),
           name: 'Movie',
           description: null,
           isActive: false,
@@ -132,13 +131,13 @@ describe('Category Unit Tests', () => {
       },
       {
         given: {
-          categoryId: new UUID('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
+          categoryId: new CategoryId('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
         },
         expected: {
-          categoryId: new UUID('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
+          categoryId: new CategoryId('f6a7d4d8-7f0c-4b5a-8b1a-7a3f9a7b1d8e'),
           name: 'Movie',
           description: 'Movie category',
           isActive: true,
@@ -152,7 +151,7 @@ describe('Category Unit Tests', () => {
 
         expect(category).toBeDefined();
         expect(category).toBeInstanceOf(Category);
-        expect(category.categoryId).toBeInstanceOf(UUID);
+        expect(category.categoryId).toBeInstanceOf(CategoryId);
         expect(category.categoryId).toEqual(expected.categoryId);
         expect(category.name).toBe(expected.name);
         expect(category.description).toBe(expected.description);

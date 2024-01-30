@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { CategoryModel } from '../category.model';
 import { CategoryModelMapper } from '../category-model.mapper';
 import { EntityValidationError } from '../../../../../shared/domain/errors/validation.error';
-import { Category } from '../../../../domain/category.entity';
+import { Category } from '../../../../domain/category.aggregate';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 
 describe('CategoryModelMapper Integration Tests', () => {

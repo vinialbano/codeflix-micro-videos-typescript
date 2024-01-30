@@ -1,10 +1,7 @@
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import { EntityValidationError } from '../../../../../shared/domain/errors/validation.error';
-import {
-  InvalidUUIDError,
-  UUID,
-} from '../../../../../shared/domain/value-objects/uuid.vo';
-import { Category } from '../../../../domain/category.entity';
+import { InvalidUUIDError } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import { CategoryRepository } from '../../../../domain/category.repository';
 import { CategoryInMemoryRepository } from '../../../../infra/db/in-memory/category-in-memory.repository';
 import { UpdateCategoryUseCase } from '../update-category.use-case';
@@ -27,19 +24,19 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
     });
 
     it('should throw an error if category does not exist', async () => {
-      const input = { id: new UUID().id };
+      const input = { id: new CategoryId().id };
       await expect(useCase.execute(input)).rejects.toThrow(
         new NotFoundError(input.id, Category),
       );
     });
 
     it('should throw if the entity is invalid', async () => {
-      const uuid = new UUID();
+      const id = new CategoryId();
       const input = {
-        id: uuid.id,
+        id: id.id,
         name: 'a'.repeat(256),
       };
-      const category = Category.fake().aCategory().withUUID(uuid).build();
+      const category = Category.fake().aCategory().withCategoryId(id).build();
       await categoryRepository.insert(category);
       await expect(() => useCase.execute(input)).rejects.toThrow(
         EntityValidationError,

@@ -14,13 +14,12 @@ import {
   ListCategoriesFixture,
   UpdateCategoryFixture,
 } from './category-fixture';
-import { UUID } from '@core/shared/domain/value-objects/uuid.vo';
 import { CategoryOutputMapper } from '@core/category/application/use-cases/shared/category-output';
 import {
   CategoryCollectionPresenter,
   CategoryPresenter,
 } from '../categories.presenter';
-import { Category } from '@core/category/domain/category.entity';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
 
 describe('CategoriesController Integration Tests', () => {
   let controller: CategoriesController;
@@ -53,7 +52,7 @@ describe('CategoriesController Integration Tests', () => {
         async ({ sentData, expected }) => {
           const presenter = await controller.create(sentData);
           const entity = (await repository.findById(
-            new UUID(presenter.id),
+            new CategoryId(presenter.id),
           )) as Category;
           const output = CategoryOutputMapper.toDTO(entity);
           expect(presenter).toEqual(new CategoryPresenter(output));
@@ -80,7 +79,7 @@ describe('CategoriesController Integration Tests', () => {
             sentData,
           );
           const entity = (await repository.findById(
-            new UUID(presenter.id),
+            new CategoryId(presenter.id),
           )) as Category;
           const output = CategoryOutputMapper.toDTO(entity);
           expect(presenter).toEqual(new CategoryPresenter(output));
@@ -106,7 +105,7 @@ describe('CategoriesController Integration Tests', () => {
       await repository.insert(category);
       const response = await controller.remove(category.categoryId.id);
       const entity = await repository.findById(
-        new UUID(category.categoryId.id),
+        new CategoryId(category.categoryId.id),
       );
       expect(response).toBeUndefined();
       expect(entity).toBeNull();
@@ -119,7 +118,7 @@ describe('CategoriesController Integration Tests', () => {
       await repository.insert(category);
       const presenter = await controller.findOne(category.categoryId.id);
       const entity = (await repository.findById(
-        new UUID(presenter.id),
+        new CategoryId(presenter.id),
       )) as Category;
       const output = CategoryOutputMapper.toDTO(entity);
       expect(presenter).toEqual(new CategoryPresenter(output));

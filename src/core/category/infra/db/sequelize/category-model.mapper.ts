@@ -1,6 +1,5 @@
 import { EntityValidationError } from '../../../../shared/domain/errors/validation.error';
-import { UUID } from '../../../../shared/domain/value-objects/uuid.vo';
-import { Category } from '../../../domain/category.entity';
+import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { CategoryModel } from './category.model';
 
 export class CategoryModelMapper {
@@ -16,7 +15,7 @@ export class CategoryModelMapper {
 
   static toEntity(model: CategoryModel): Category {
     const entity = new Category({
-      categoryId: new UUID(model.categoryId),
+      categoryId: new CategoryId(model.categoryId),
       name: model.name,
       description: model.description,
       isActive: model.isActive,

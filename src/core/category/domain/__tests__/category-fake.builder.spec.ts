@@ -1,7 +1,6 @@
 import { Chance } from 'chance';
-import { UUID } from '../../../shared/domain/value-objects/uuid.vo';
 import { CategoryFakeBuilder } from '../category-fake.builder';
-import { Category } from '../category.entity';
+import { Category, CategoryId } from '../category.aggregate';
 
 describe('CategoryFakeBuilder Unit Tests', () => {
   describe('categoryId()', () => {
@@ -13,15 +12,15 @@ describe('CategoryFakeBuilder Unit Tests', () => {
       );
     });
 
-    it('should return a UUID', () => {
-      const builder = CategoryFakeBuilder.aCategory().withUUID(
-        () => new UUID(),
+    it('should return a CategoryId', () => {
+      const builder = CategoryFakeBuilder.aCategory().withCategoryId(
+        () => new CategoryId(),
       );
-      expect(builder.categoryId).toBeInstanceOf(UUID);
+      expect(builder.categoryId).toBeInstanceOf(CategoryId);
     });
 
     it('should return an ID given an index', () => {
-      const builder = CategoryFakeBuilder.aCategory().withUUID(
+      const builder = CategoryFakeBuilder.aCategory().withCategoryId(
         (i) => `${i + 1}` as any,
       );
       expect(builder.categoryId).toBe('1');
@@ -132,25 +131,26 @@ describe('CategoryFakeBuilder Unit Tests', () => {
     });
   });
 
-  describe('withUUID()', () => {
+  describe('withCategoryId()', () => {
     it('should return a CategoryFakeBuilder', () => {
-      const builder = CategoryFakeBuilder.aCategory().withUUID(
-        () => new UUID(),
+      const builder = CategoryFakeBuilder.aCategory().withCategoryId(
+        () => new CategoryId(),
       );
       expect(builder).toBeInstanceOf(CategoryFakeBuilder);
     });
 
-    it('should set categoryId factory and generate a UUID', () => {
-      const builder = CategoryFakeBuilder.aCategory().withUUID(
-        () => new UUID(),
+    it('should set categoryId factory and generate a CategoryId', () => {
+      const builder = CategoryFakeBuilder.aCategory().withCategoryId(
+        () => new CategoryId(),
       );
       const factory = builder['_categoryId'] as any;
-      expect(factory()).toBeInstanceOf(UUID);
+      expect(factory()).toBeInstanceOf(CategoryId);
     });
 
     it('should set categoryId to a given value', () => {
-      const categoryId = new UUID();
-      const builder = CategoryFakeBuilder.aCategory().withUUID(categoryId);
+      const categoryId = new CategoryId();
+      const builder =
+        CategoryFakeBuilder.aCategory().withCategoryId(categoryId);
       expect(builder['_categoryId']).toBe(categoryId);
     });
   });
@@ -284,17 +284,17 @@ describe('CategoryFakeBuilder Unit Tests', () => {
     it('should return a Category', () => {
       const category = CategoryFakeBuilder.aCategory().build();
       expect(category).toBeInstanceOf(Category);
-      expect(category.categoryId).toBeInstanceOf(UUID);
+      expect(category.categoryId).toBeInstanceOf(CategoryId);
       expect(category.name).toBeDefined();
       expect(category.description).toBeDefined();
       expect(category.isActive).toBeDefined();
       expect(category.createdAt).toBeDefined();
     });
 
-    it('should return a Category with a fixed UUID', () => {
-      const categoryId = new UUID();
+    it('should return a Category with a fixed CategoryId', () => {
+      const categoryId = new CategoryId();
       const category = CategoryFakeBuilder.aCategory()
-        .withUUID(() => categoryId)
+        .withCategoryId(() => categoryId)
         .build();
       expect(category.categoryId).toBe(categoryId);
     });

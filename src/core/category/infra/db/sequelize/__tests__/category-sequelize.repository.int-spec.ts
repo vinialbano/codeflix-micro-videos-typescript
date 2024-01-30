@@ -1,16 +1,13 @@
-import { Sequelize } from 'sequelize-typescript';
-import { Category } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import { CategorySequelizeRepository } from '../category-sequelize.repository';
 import { CategoryModel } from '../category.model';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
-import { Model } from 'sequelize';
 import { CategoryModelMapper } from '../category-model.mapper';
 import {
   CategorySearchParams,
   CategorySearchResult,
 } from '../../../../domain/category.repository';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
-import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo';
 
 describe('CategorySequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -69,7 +66,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
 
   describe('delete()', () => {
     it('should throw an error if the category does not exist', async () => {
-      const id = new UUID();
+      const id = new CategoryId();
       await expect(repository.delete(id)).rejects.toThrow(
         new NotFoundError(id, Category),
       );
