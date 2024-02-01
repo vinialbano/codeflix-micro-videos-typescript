@@ -1,6 +1,6 @@
-import { AggregateRoot } from '@core/shared/domain/aggregate-root';
-import { includeIfDefined } from '@core/shared/utils';
-import { UUID } from '@core/shared/domain/value-objects/uuid.vo';
+import { AggregateRoot } from '../../shared/domain/aggregate-root';
+import { includeIfDefined } from '../../shared/utils';
+import { UUID } from '../../shared/domain/value-objects/uuid.vo';
 import { CastMemberType } from './cast-member-type.vo';
 import { CastMemberValidatorFactory } from './cast-member.validator';
 import { CastMemberFakeBuilder } from './cast-member-fake.builder';
@@ -63,7 +63,7 @@ export class CastMember extends AggregateRoot {
     this.type = type;
   }
 
-  toJSON(): Record<string, unknown> {
+  toJSON() {
     return {
       castMemberId: this.castMemberId.id,
       name: this.name,

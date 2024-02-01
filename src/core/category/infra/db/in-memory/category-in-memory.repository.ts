@@ -1,3 +1,4 @@
+import { SortCriterion } from '@core/shared/domain/repository/search-params';
 import { InMemorySearchableRepository } from '../../../../shared/infra/db/in-memory-searchable.repository';
 import { Category, CategoryId } from '../../../domain/category.aggregate';
 import {
@@ -29,11 +30,13 @@ export class CategoryInMemoryRepository
 
   protected applySort(
     items: Category[],
-    sort: string | null,
-    sortDirection: 'asc' | 'desc' | null,
+    sortCriteria?: SortCriterion<Category> | SortCriterion<Category>[] | null,
   ): Category[] {
-    return sort
-      ? super.applySort(items, sort, sortDirection)
-      : super.applySort(items, 'createdAt', 'desc');
+    return sortCriteria
+      ? super.applySort(items, sortCriteria)
+      : super.applySort(items, {
+          field: 'createdAt',
+          direction: 'desc',
+        });
   }
 }

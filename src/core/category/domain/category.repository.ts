@@ -5,7 +5,10 @@ import { Category, CategoryId } from './category.aggregate';
 
 export type CategoryFilter = string;
 
-export class CategorySearchParams extends SearchParams<CategoryFilter> {}
+export class CategorySearchParams extends SearchParams<
+  Category,
+  CategoryFilter
+> {}
 
 export class CategorySearchResult extends SearchResult<Category> {}
 

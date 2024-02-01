@@ -1,26 +1,30 @@
-import { Category } from '../../../domain/category.aggregate';
-import { CategoryInMemoryRepository } from './category-in-memory.repository';
+import {
+  CAST_MEMBER_TYPES,
+  CastMemberType,
+} from '../../../domain/cast-member-type.vo';
+import { CastMember } from '../../../domain/cast-member.aggregate';
+import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository';
 
-describe('CategoryInMemoryRepository', () => {
+describe('CastMemberInMemoryRepository', () => {
   describe('getEntity()', () => {
-    it('should return Category', () => {
-      const repository = new CategoryInMemoryRepository();
-      expect(repository.getEntity()).toEqual(Category);
+    it('should return CastMember', () => {
+      const repository = new CastMemberInMemoryRepository();
+      expect(repository.getEntity()).toEqual(CastMember);
     });
   });
 
   describe('applyFilter()', () => {
     it('should return all items if filter is null', async () => {
-      const repository = new CategoryInMemoryRepository();
-      const items = Category.fake().someCategories(3).build();
+      const repository = new CastMemberInMemoryRepository();
+      const items = CastMember.fake().someCastMembers(3).build();
       const filteredItems = await repository['applyFilter'](items, null);
       expect(filteredItems).toEqual(items);
     });
 
     it('should return filtered items by name', async () => {
-      const repository = new CategoryInMemoryRepository();
-      const items = Category.fake()
-        .someCategories(3)
+      const repository = new CastMemberInMemoryRepository();
+      const items = CastMember.fake()
+        .someCastMembers(3)
         .withName((i) => `Name ${i + 1}`)
         .build();
       const filteredItems = await repository['applyFilter'](items, '2');
@@ -30,10 +34,10 @@ describe('CategoryInMemoryRepository', () => {
 
   describe('applySort()', () => {
     it('should sort by createdAt desc if sort is null', () => {
-      const repository = new CategoryInMemoryRepository();
+      const repository = new CastMemberInMemoryRepository();
       const date = new Date();
-      const items = Category.fake()
-        .someCategories(3)
+      const items = CastMember.fake()
+        .someCastMembers(3)
         .withCreatedAt((i) => new Date(date.getTime() + i * 1000))
         .build();
       const sortedItems = repository['applySort'](items);
@@ -41,10 +45,15 @@ describe('CategoryInMemoryRepository', () => {
     });
 
     it('should sort using the given parameters', async () => {
-      const repository = new CategoryInMemoryRepository();
-      const items = Category.fake()
-        .someCategories(3)
+      const repository = new CastMemberInMemoryRepository();
+      const items = CastMember.fake()
+        .someCastMembers(3)
         .withName((i) => `Name ${i + 1}`)
+        .withType((i) =>
+          i % 2 === 0
+            ? new CastMemberType(CAST_MEMBER_TYPES.DIRECTOR)
+            : new CastMemberType(CAST_MEMBER_TYPES.ACTOR),
+        )
         .build();
       const sortedItems = repository['applySort'](items, {
         field: 'name',
@@ -57,6 +66,12 @@ describe('CategoryInMemoryRepository', () => {
         direction: 'asc',
       });
       expect(sortedItems2).toEqual([items[0], items[1], items[2]]);
+
+      const sortedItems3 = repository['applySort'](items, [
+        { field: 'type', direction: 'asc' },
+        { field: 'name', direction: 'asc' },
+      ]);
+      expect(sortedItems3).toEqual([items[0], items[2], items[1]]);
     });
   });
 });

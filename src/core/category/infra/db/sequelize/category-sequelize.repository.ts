@@ -8,18 +8,14 @@ import {
 } from '../../../domain/category.repository';
 import { CategoryModel } from './category.model';
 import { CategoryModelMapper } from './category-model.mapper';
-import { SortDirection } from '@core/shared/domain/repository/search-params';
+import { SortCriterion } from '@core/shared/domain/repository/search-params';
 import { Literal } from 'sequelize/lib/utils';
 
 export class CategorySequelizeRepository implements CategoryRepository {
   sortableFields: string[] = ['name', 'createdAt'];
-  orderBy: Record<
-    string,
-    Record<string, (sortDirection: SortDirection) => Literal>
-  > = {
+  orderBy: Record<string, Record<string, Literal>> = {
     mysql: {
-      name: (sortDirection: SortDirection) =>
-        literal(`binary name ${sortDirection}`),
+      name: literal(`binary name`),
     },
   };
 
@@ -77,17 +73,26 @@ export class CategorySequelizeRepository implements CategoryRepository {
   async search(props: CategorySearchParams): Promise<CategorySearchResult> {
     const offset = (props.page - 1) * props.limit;
     const limit = props.limit;
-
+    let sortCriteria =
+      props.sortCriteria && !Array.isArray(props.sortCriteria)
+        ? [props.sortCriteria]
+        : props.sortCriteria;
+    if (sortCriteria) {
+      sortCriteria = sortCriteria.filter((criterion) =>
+        this.sortableFields.includes(criterion.field),
+      );
+      if (!sortCriteria.length) {
+        sortCriteria = null;
+      }
+    }
     const { rows: models, count } = await this.categoryModel.findAndCountAll({
       ...(props.filter && {
         where: {
           name: { [Op.like]: `%${props.filter}%` },
         },
       }),
-      ...(props.sort && this.sortableFields.includes(props.sort)
-        ? {
-            order: this.formatSort(props.sort, props.sortDirection ?? 'asc'),
-          }
+      ...(sortCriteria
+        ? { order: this.formatSort(sortCriteria) }
         : { order: [['createdAt', 'desc']] }),
       offset,
       limit,
@@ -106,14 +111,15 @@ export class CategorySequelizeRepository implements CategoryRepository {
   }
 
   private formatSort(
-    sort: string,
-    sortDirection: SortDirection,
-  ): Literal | [string, string][] {
+    sortCriteria: SortCriterion<Category>[],
+  ): [string | Literal, string][] {
     const dialect = this.categoryModel.sequelize!.getDialect();
-    if (this.orderBy[dialect]?.[sort]) {
-      return this.orderBy[dialect]![sort]!(sortDirection);
-    }
-    return [[sort, sortDirection]];
+    return sortCriteria.map(({ field, direction }) => {
+      if (this.orderBy[dialect]?.[field]) {
+        return [this.orderBy[dialect]![field]!, direction ?? 'asc'];
+      }
+      return [field, direction ?? 'asc'];
+    });
   }
 
   getEntity(): new (...args: any[]) => Category {

@@ -1,3 +1,4 @@
+import { Category } from '@core/category/domain/category.aggregate';
 import {
   PaginationOutput,
   PaginationOutputMapper,
@@ -22,7 +23,17 @@ export class ListCategoriesUseCase
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(input: ListCategoriesInput): Promise<ListCategoriesOutput> {
-    const params = new CategorySearchParams(input);
+    const params = new CategorySearchParams({
+      ...(input.page && { page: input.page }),
+      ...(input.limit && { limit: input.limit }),
+      ...(input.filter && { filter: input.filter }),
+      ...(input.sort && {
+        sortCriteria: {
+          field: input.sort as keyof Category,
+          ...(input.sortDirection && { direction: input.sortDirection }),
+        },
+      }),
+    });
     const searchResult = await this.categoryRepository.search(params);
     return this.toOutput(searchResult);
   }

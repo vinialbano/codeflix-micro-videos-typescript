@@ -225,7 +225,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           params: new CategorySearchParams({
             page: 1,
             limit: 2,
-            sort: 'name',
+            sortCriteria: { field: 'name' },
           }),
           expected: [categories[1]!.toJSON(), categories[0]!.toJSON()],
         },
@@ -233,8 +233,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           params: new CategorySearchParams({
             page: 1,
             limit: 2,
-            sort: 'name',
-            sortDirection: 'desc',
+            sortCriteria: { field: 'name', direction: 'desc' },
           }),
           expected: [categories[3]!.toJSON(), categories[4]!.toJSON()],
         },
@@ -242,7 +241,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           params: new CategorySearchParams({
             page: 1,
             limit: 2,
-            sort: 'createdAt',
+            sortCriteria: { field: 'createdAt' },
           }),
           expected: [categories[0]!.toJSON(), categories[1]!.toJSON()],
         },
@@ -250,8 +249,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           params: new CategorySearchParams({
             page: 1,
             limit: 2,
-            sort: 'createdAt',
-            sortDirection: 'desc',
+            sortCriteria: { field: 'createdAt', direction: 'desc' },
           }),
           expected: [categories[4]!.toJSON(), categories[3]!.toJSON()],
         },
@@ -259,7 +257,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           params: new CategorySearchParams({
             page: 1,
             limit: 2,
-            sort: 'invalidField',
+            sortCriteria: { field: 'invalidField' as any },
           }),
           // Sort by createdAt desc by default
           expected: [categories[4]!.toJSON(), categories[3]!.toJSON()],
@@ -305,8 +303,7 @@ describe('CategorySequelizeRepository Integration Tests', () => {
           page: 1,
           limit: 2,
           filter: 'Category',
-          sort: 'name',
-          sortDirection: 'desc',
+          sortCriteria: { field: 'name', direction: 'desc' },
         }),
       );
       expect(searchOutput).toBeInstanceOf(CategorySearchResult);
@@ -322,6 +319,52 @@ describe('CategorySequelizeRepository Integration Tests', () => {
       );
       expect(searchOutput.items[1]!.toJSON()).toMatchObject(
         categories[3]!.toJSON(),
+      );
+    });
+
+    it('should apply paginate, filter and sort by multiple fields', async () => {
+      const categories = [
+        ...Category.fake()
+          .someCategories(2)
+          .withName('Category A')
+          .withCreatedAt((i) => new Date(new Date().getTime() + i * 1000))
+          .build(),
+        ...Category.fake()
+          .someCategories(3)
+          .withName('Category B')
+          .withCreatedAt((i) => new Date(new Date().getTime() + i * 1000))
+          .build(),
+        Category.fake().aCategory().withName('C').build(),
+      ];
+      await CategoryModel.bulkCreate(categories.map((c) => c.toJSON()));
+
+      const searchOutput = await repository.search(
+        new CategorySearchParams({
+          page: 1,
+          limit: 3,
+          filter: 'Category',
+          sortCriteria: [
+            { field: 'name', direction: 'desc' },
+            { field: 'createdAt', direction: 'desc' },
+          ],
+        }),
+      );
+      expect(searchOutput).toBeInstanceOf(CategorySearchResult);
+      expect(searchOutput.toJSON()).toMatchObject({
+        total: 5,
+        currentPage: 1,
+        lastPage: 2,
+        limit: 3,
+      });
+      expect(searchOutput.items.length).toBe(3);
+      expect(searchOutput.items[0]!.toJSON()).toMatchObject(
+        categories[4]!.toJSON(),
+      );
+      expect(searchOutput.items[1]!.toJSON()).toMatchObject(
+        categories[3]!.toJSON(),
+      );
+      expect(searchOutput.items[2]!.toJSON()).toMatchObject(
+        categories[2]!.toJSON(),
       );
     });
   });

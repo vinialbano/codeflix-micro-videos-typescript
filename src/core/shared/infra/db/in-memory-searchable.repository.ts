@@ -1,6 +1,10 @@
 import { Entity } from '../../domain/entity';
 import { SearchableRepository } from '../../domain/repository/repository';
-import { SearchParams } from '../../domain/repository/search-params';
+import {
+  SearchParams,
+  SortCriterion,
+  normalizeCriterion,
+} from '../../domain/repository/search-params';
 import { SearchResult } from '../../domain/repository/search-result';
 import { ValueObject } from '../../domain/value-objects/value-object';
 import { InMemoryRepository } from './in-memory.repository';
@@ -15,13 +19,9 @@ export abstract class InMemorySearchableRepository<
 {
   sortableFields: string[] = [];
 
-  async search(props: SearchParams<Filter>): Promise<SearchResult<E>> {
+  async search(props: SearchParams<E, Filter>): Promise<SearchResult<E>> {
     const filteredItems = await this.applyFilter(this.items, props.filter);
-    const sortedItems = this.applySort(
-      filteredItems,
-      props.sort,
-      props.sortDirection,
-    );
+    const sortedItems = this.applySort(filteredItems, props.sortCriteria);
     const paginatedItems = this.applyPagination(
       sortedItems,
       props.page,
@@ -43,8 +43,8 @@ export abstract class InMemorySearchableRepository<
 
   protected applyPagination(
     items: E[],
-    page: SearchParams['page'],
-    limit: SearchParams['limit'],
+    page: SearchParams<E>['page'],
+    limit: SearchParams<E>['limit'],
   ): E[] {
     const start = (page - 1) * limit;
     const end = start + limit;
@@ -53,23 +53,47 @@ export abstract class InMemorySearchableRepository<
 
   protected applySort(
     items: E[],
-    sort: SearchParams['sort'],
-    sortDirection: SearchParams['sortDirection'],
-    customGetter?: (sort: string, item: E) => any,
+    criteria: SortCriterion<E> | SortCriterion<E>[] | null,
   ): E[] {
-    if (!sort || !this.sortableFields.includes(sort)) {
+    if (!criteria || typeof criteria !== 'object') {
       return items;
     }
-    return [...items].sort((a, b) => {
-      const aValue = customGetter ? customGetter(sort, a) : a[sort as keyof E];
-      const bValue = customGetter ? customGetter(sort, b) : b[sort as keyof E];
-      if (aValue < bValue) {
-        return sortDirection === 'asc' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return sortDirection === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
+    if (!Array.isArray(criteria)) {
+      criteria = [criteria];
+    }
+    criteria = criteria
+      .map(normalizeCriterion)
+      .filter((criterion) => criterion !== null) as SortCriterion<E>[];
+
+    if (!criteria.length) {
+      return items;
+    }
+
+    const compareFunctions = criteria.map(
+      ({ field, direction, transform = (x) => x }) => {
+        return (a: E, b: E) => {
+          if (!this.sortableFields.includes(field)) {
+            return 0;
+          }
+          const aValue = transform(a[field]);
+          const bValue = transform(b[field]);
+          if (aValue < bValue) {
+            return direction === 'asc' ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return direction === 'asc' ? 1 : -1;
+          }
+          return 0;
+        };
+      },
+    );
+
+    const combinedCompareFunction = (a: E, b: E): number => {
+      return compareFunctions.reduce((result, compareFunction) => {
+        return result === 0 ? compareFunction(a, b) : result;
+      }, 0);
+    };
+
+    return [...items].sort(combinedCompareFunction);
   }
 }
