@@ -84,9 +84,6 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
       sortCriteria = sortCriteria.filter((criterion) =>
         this.sortableFields.includes(criterion.field),
       );
-      if (!sortCriteria.length) {
-        sortCriteria = null;
-      }
     }
     const { rows: models, count } = await this.castMemberModel.findAndCountAll({
       ...(props.filter && {
@@ -94,7 +91,7 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
           name: { [Op.like]: `%${props.filter}%` },
         },
       }),
-      ...(sortCriteria
+      ...(sortCriteria.length
         ? { order: this.formatSort(sortCriteria) }
         : { order: [['createdAt', 'desc']] }),
       offset,

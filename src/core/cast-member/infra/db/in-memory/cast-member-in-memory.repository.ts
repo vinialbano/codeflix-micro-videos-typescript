@@ -33,12 +33,9 @@ export class CastMemberInMemoryRepository
 
   protected applySort(
     items: CastMember[],
-    sortCriteria?:
-      | SortCriterion<CastMember>
-      | SortCriterion<CastMember>[]
-      | null,
+    sortCriteria: SortCriterion<CastMember> | SortCriterion<CastMember>[] = [],
   ): CastMember[] {
-    return sortCriteria
+    return !Array.isArray(sortCriteria) || sortCriteria.length
       ? super.applySort(items, sortCriteria)
       : super.applySort(items, {
           field: 'createdAt',

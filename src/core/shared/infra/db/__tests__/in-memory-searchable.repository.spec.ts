@@ -71,14 +71,14 @@ describe('InMemorySearchableRepository Unit Tests', () => {
   });
 
   describe('applySort()', () => {
-    it('should return all items if sortCriteria is null', () => {
+    it('should return all items if sortCriteria is unset', () => {
       const repository = new InMemorySearchableRepositoryStub();
       const items = [
         new StubEntity('John'),
         new StubEntity('Doe'),
         new StubEntity('Jane'),
       ];
-      const sortedItems = repository['applySort'](items, null);
+      const sortedItems = repository['applySort'](items);
       expect(sortedItems).toEqual(items);
     });
 
@@ -125,36 +125,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
       expect(sortedItems).toEqual([items[0], items[1], items[3], items[2]]);
     });
 
-    it('should return sorted items if sortCriteria field is in sortableFields and customGetter is provided', () => {
-      const repository = new InMemorySearchableRepositoryStub();
-      const items = [
-        new StubEntity('John'),
-        new StubEntity('Doe'),
-        new StubEntity('Jane'),
-      ];
-      const sortedItems = repository['applySort'](items, {
-        field: 'name',
-        direction: 'asc',
-        transform: (name: string) => name.toLowerCase(),
-      });
-      expect(sortedItems).toEqual([items[1], items[2], items[0]]);
-    });
-
-    it('should return sorted items if sortCriteria field is in sortableFields and direction is desc and customGetter is provided', () => {
-      const repository = new InMemorySearchableRepositoryStub();
-      const items = [
-        new StubEntity('A'),
-        new StubEntity('a'),
-        new StubEntity('B'),
-      ];
-      const sortedItems = repository['applySort'](items, {
-        field: 'name',
-        direction: 'desc',
-        transform: (name: string) => name.toLowerCase(),
-      });
-      expect(sortedItems).toEqual([items[2], items[0], items[1]]);
-    });
-
     it('should return sorted by multiple conditions', () => {
       const repository = new InMemorySearchableRepositoryStub();
       const items = [
@@ -171,29 +141,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
         {
           field: 'description',
           direction: 'desc',
-        },
-      ]);
-      expect(sortedItems).toEqual([items[2], items[3], items[1], items[0]]);
-    });
-
-    it('should return sorted by multiple conditions with customGetter', () => {
-      const repository = new InMemorySearchableRepositoryStub();
-      const items = [
-        new StubEntity('John', 'A'),
-        new StubEntity('John', 'b'),
-        new StubEntity('Doe', 'A'),
-        new StubEntity('Jane', 'a'),
-      ];
-      const sortedItems = repository['applySort'](items, [
-        {
-          field: 'name',
-          direction: 'asc',
-          transform: (name: string) => name.toLowerCase(),
-        },
-        {
-          field: 'description',
-          direction: 'desc',
-          transform: (description: string) => description.toLowerCase(),
         },
       ]);
       expect(sortedItems).toEqual([items[2], items[3], items[1], items[0]]);

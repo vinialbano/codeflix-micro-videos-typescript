@@ -33,7 +33,7 @@ describe('CastMemberInMemoryRepository', () => {
   });
 
   describe('applySort()', () => {
-    it('should sort by createdAt desc if sort is null', () => {
+    it('should sort by createdAt desc if sortCriteria is not set', () => {
       const repository = new CastMemberInMemoryRepository();
       const date = new Date();
       const items = CastMember.fake()

@@ -29,7 +29,7 @@ describe('CategoryInMemoryRepository', () => {
   });
 
   describe('applySort()', () => {
-    it('should sort by createdAt desc if sort is null', () => {
+    it('should sort by createdAt desc if sortCriteria is not set', () => {
       const repository = new CategoryInMemoryRepository();
       const date = new Date();
       const items = Category.fake()

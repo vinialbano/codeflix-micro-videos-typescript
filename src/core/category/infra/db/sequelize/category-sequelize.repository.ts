@@ -81,9 +81,6 @@ export class CategorySequelizeRepository implements CategoryRepository {
       sortCriteria = sortCriteria.filter((criterion) =>
         this.sortableFields.includes(criterion.field),
       );
-      if (!sortCriteria.length) {
-        sortCriteria = null;
-      }
     }
     const { rows: models, count } = await this.categoryModel.findAndCountAll({
       ...(props.filter && {
@@ -91,7 +88,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
           name: { [Op.like]: `%${props.filter}%` },
         },
       }),
-      ...(sortCriteria
+      ...(sortCriteria.length
         ? { order: this.formatSort(sortCriteria) }
         : { order: [['createdAt', 'desc']] }),
       offset,

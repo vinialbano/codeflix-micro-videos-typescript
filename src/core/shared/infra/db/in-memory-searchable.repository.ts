@@ -53,11 +53,8 @@ export abstract class InMemorySearchableRepository<
 
   protected applySort(
     items: E[],
-    criteria: SortCriterion<E> | SortCriterion<E>[] | null,
+    criteria: SortCriterion<E> | SortCriterion<E>[] = [],
   ): E[] {
-    if (!criteria || typeof criteria !== 'object') {
-      return items;
-    }
     if (!Array.isArray(criteria)) {
       criteria = [criteria];
     }
@@ -69,24 +66,22 @@ export abstract class InMemorySearchableRepository<
       return items;
     }
 
-    const compareFunctions = criteria.map(
-      ({ field, direction, transform = (x) => x }) => {
-        return (a: E, b: E) => {
-          if (!this.sortableFields.includes(field)) {
-            return 0;
-          }
-          const aValue = transform(a[field]);
-          const bValue = transform(b[field]);
-          if (aValue < bValue) {
-            return direction === 'asc' ? -1 : 1;
-          }
-          if (aValue > bValue) {
-            return direction === 'asc' ? 1 : -1;
-          }
+    const compareFunctions = criteria.map(({ field, direction }) => {
+      return (a: E, b: E) => {
+        if (!this.sortableFields.includes(field)) {
           return 0;
-        };
-      },
-    );
+        }
+        const aValue = a[field];
+        const bValue = b[field];
+        if (aValue < bValue) {
+          return direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      };
+    });
 
     const combinedCompareFunction = (a: E, b: E): number => {
       return compareFunctions.reduce((result, compareFunction) => {

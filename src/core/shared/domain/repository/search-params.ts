@@ -6,13 +6,12 @@ export type SortDirection = 'asc' | 'desc';
 export type SortCriterion<E> = {
   field: Extract<keyof E, string>;
   direction?: SortDirection;
-  transform?: (prop: any) => any;
 };
 
 export type SearchParamsConstructorProps<E extends Entity, Filter = string> = {
   page?: number;
   limit?: number;
-  sortCriteria?: SortCriterion<E> | SortCriterion<E>[] | null;
+  sortCriteria?: SortCriterion<E> | SortCriterion<E>[];
   filter?: Filter | null;
 };
 
@@ -24,12 +23,12 @@ export function normalizeCriterion<E extends Entity>(
     return null;
   }
 
-  let { direction, transform } = criterion;
   // Nullify the criterion if field is not a string
   if (typeof criterion.field !== 'string') {
     return null;
   }
 
+  let { direction } = criterion;
   // Convert direction to lowercase and default to 'asc' if not 'asc' or 'desc'
   if (!direction || typeof direction !== 'string') {
     direction = 'asc';
@@ -37,16 +36,10 @@ export function normalizeCriterion<E extends Entity>(
   direction = direction.toLowerCase() as SortDirection;
   direction = ['asc', 'desc'].includes(direction) ? direction : 'asc';
 
-  // Unset transform if it is not a function
-  if (transform && typeof transform !== 'function') {
-    transform = undefined;
-  }
-
   // Return the criterion
   return {
     field: criterion.field,
     direction,
-    ...(transform && { transform }),
   };
 }
 
@@ -56,7 +49,7 @@ export class SearchParams<
 > extends ValueObject {
   protected _page: number = 1;
   protected _limit: number = 15;
-  protected _sortCriteria: SortCriterion<E> | SortCriterion<E>[] | null = null;
+  protected _sortCriteria: SortCriterion<E> | SortCriterion<E>[] = [];
   protected _filter: Filter | null = null;
 
   constructor(props: SearchParamsConstructorProps<E, Filter> = {}) {
@@ -96,19 +89,17 @@ export class SearchParams<
     this._limit = _limit;
   }
 
-  get sortCriteria(): SortCriterion<E> | SortCriterion<E>[] | null {
+  get sortCriteria(): SortCriterion<E> | SortCriterion<E>[] {
     return this._sortCriteria;
   }
 
   private set sortCriteria(
-    sortCriteria: SortCriterion<E> | SortCriterion<E>[] | null,
+    sortCriteria: SortCriterion<E> | SortCriterion<E>[] | undefined,
   ) {
-    // Reset to null if no valid criteria are provided
     if (!sortCriteria) {
-      this._sortCriteria = null;
+      this._sortCriteria = [];
       return;
     }
-
     // Ensuring that sortCriteria is always an array
     const criteriaArray = Array.isArray(sortCriteria)
       ? sortCriteria
@@ -119,11 +110,6 @@ export class SearchParams<
       .map(normalizeCriterion)
       .filter((criterion) => criterion !== null) as SortCriterion<E>[];
 
-    // Adjusting _sortCriteria based on the verified criteria
-    if (!normalizedCriteria.length) {
-      this._sortCriteria = null;
-      return;
-    }
     if (normalizedCriteria.length === 1) {
       this._sortCriteria = normalizedCriteria[0]!;
       return;

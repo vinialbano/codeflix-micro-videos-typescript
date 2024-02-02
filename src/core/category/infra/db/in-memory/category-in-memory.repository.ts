@@ -30,9 +30,9 @@ export class CategoryInMemoryRepository
 
   protected applySort(
     items: Category[],
-    sortCriteria?: SortCriterion<Category> | SortCriterion<Category>[] | null,
+    sortCriteria: SortCriterion<Category> | SortCriterion<Category>[] = [],
   ): Category[] {
-    return sortCriteria
+    return !Array.isArray(sortCriteria) || sortCriteria.length
       ? super.applySort(items, sortCriteria)
       : super.applySort(items, {
           field: 'createdAt',

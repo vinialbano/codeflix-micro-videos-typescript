@@ -6,7 +6,7 @@ describe('SearchParams Unit Tests', () => {
       const searchParams = new SearchParams();
       expect(searchParams.page).toBe(1);
       expect(searchParams.limit).toBe(15);
-      expect(searchParams.sortCriteria).toBeNull();
+      expect(searchParams.sortCriteria).toEqual([]);
       expect(searchParams.filter).toBeNull();
     });
 
@@ -57,21 +57,21 @@ describe('SearchParams Unit Tests', () => {
     );
 
     const sortTestCases = [
-      { given: undefined, expected: null },
-      { given: null, expected: null },
-      { given: '', expected: null },
-      { given: 'sort', expected: null },
-      { given: 1, expected: null },
-      { given: 1.1, expected: null },
-      { given: true, expected: null },
-      { given: false, expected: null },
+      { given: undefined, expected: [] },
+      { given: null, expected: [] },
+      { given: '', expected: [] },
+      { given: 'sort', expected: [] },
+      { given: 1, expected: [] },
+      { given: 1.1, expected: [] },
+      { given: true, expected: [] },
+      { given: false, expected: [] },
       {
         given: { field: null },
-        expected: null,
+        expected: [],
       },
       {
         given: { field: 1 },
-        expected: null,
+        expected: [],
       },
       {
         given: { field: 'field1' },
@@ -104,105 +104,6 @@ describe('SearchParams Unit Tests', () => {
       {
         given: { field: 'field1', direction: 'DESC' },
         expected: { field: 'field1', direction: 'desc' },
-      },
-      {
-        given: { field: 'field1', transform: null },
-        expected: { field: 'field1', direction: 'asc' },
-      },
-      {
-        given: { field: 'field1', transform: 1 },
-        expected: { field: 'field1', direction: 'asc' },
-      },
-      {
-        given: { field: 'field1', transform: 'not-function' },
-        expected: { field: 'field1', direction: 'asc' },
-      },
-      {
-        given: { field: 'field1', transform: () => 'custom' },
-        expected: {
-          field: 'field1',
-          direction: 'asc',
-          transform: expect.any(Function),
-        },
-      },
-      {
-        given: {
-          field: 'field1',
-          direction: 'desc',
-          transform: () => 'custom',
-        },
-        expected: {
-          field: 'field1',
-          direction: 'desc',
-          transform: expect.any(Function),
-        },
-      },
-      {
-        given: [],
-        expected: null,
-      },
-      {
-        given: [
-          {
-            field: 'field1',
-            direction: 'desc',
-            transform: () => 'custom',
-          },
-        ],
-        expected: {
-          field: 'field1',
-          direction: 'desc',
-          transform: expect.any(Function),
-        },
-      },
-      {
-        given: [
-          {
-            field: 'field1',
-            direction: 'desc',
-            transform: () => 'custom',
-          },
-          {
-            field: 'field2',
-          },
-        ],
-        expected: [
-          {
-            field: 'field1',
-            direction: 'desc',
-            transform: expect.any(Function),
-          },
-          {
-            field: 'field2',
-            direction: 'asc',
-          },
-        ],
-      },
-      {
-        given: [
-          {
-            field: 'field1',
-            direction: 'desc',
-            transform: () => 'custom',
-          },
-          null,
-          1,
-          'anything',
-          {
-            field: 'field2',
-          },
-        ],
-        expected: [
-          {
-            field: 'field1',
-            direction: 'desc',
-            transform: expect.any(Function),
-          },
-          {
-            field: 'field2',
-            direction: 'asc',
-          },
-        ],
       },
     ];
     it.each(sortTestCases)(

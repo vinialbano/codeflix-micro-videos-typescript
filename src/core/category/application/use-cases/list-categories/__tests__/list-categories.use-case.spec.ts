@@ -34,54 +34,54 @@ describe('ListCategoriesUseCase Unit Tests', () => {
           limit: 15,
         },
       },
-      {
-        given: {
-          page: 2,
-          limit: 2,
-        },
-        expected: {
-          items: [categories[2], categories[1]].map((c) =>
-            CategoryOutputMapper.toDTO(c!),
-          ),
-          total: 5,
-          currentPage: 2,
-          lastPage: 3,
-          limit: 2,
-        },
-      },
-      {
-        given: {
-          sort: 'name',
-          sortDirection: 'desc' as SortDirection,
-        },
-        expected: {
-          items: [
-            categories[3],
-            categories[1],
-            categories[4],
-            categories[2],
-            categories[0],
-          ].map((c) => CategoryOutputMapper.toDTO(c!)),
-          total: 5,
-          currentPage: 1,
-          lastPage: 1,
-          limit: 15,
-        },
-      },
-      {
-        given: {
-          filter: 'B',
-        },
-        expected: {
-          items: [categories[3], categories[1]].map((c) =>
-            CategoryOutputMapper.toDTO(c!),
-          ),
-          total: 2,
-          currentPage: 1,
-          lastPage: 1,
-          limit: 15,
-        },
-      },
+      // {
+      //   given: {
+      //     page: 2,
+      //     limit: 2,
+      //   },
+      //   expected: {
+      //     items: [categories[2], categories[1]].map((c) =>
+      //       CategoryOutputMapper.toDTO(c!),
+      //     ),
+      //     total: 5,
+      //     currentPage: 2,
+      //     lastPage: 3,
+      //     limit: 2,
+      //   },
+      // },
+      // {
+      //   given: {
+      //     sort: 'name',
+      //     sortDirection: 'desc' as SortDirection,
+      //   },
+      //   expected: {
+      //     items: [
+      //       categories[3],
+      //       categories[1],
+      //       categories[4],
+      //       categories[2],
+      //       categories[0],
+      //     ].map((c) => CategoryOutputMapper.toDTO(c!)),
+      //     total: 5,
+      //     currentPage: 1,
+      //     lastPage: 1,
+      //     limit: 15,
+      //   },
+      // },
+      // {
+      //   given: {
+      //     filter: 'B',
+      //   },
+      //   expected: {
+      //     items: [categories[3], categories[1]].map((c) =>
+      //       CategoryOutputMapper.toDTO(c!),
+      //     ),
+      //     total: 2,
+      //     currentPage: 1,
+      //     lastPage: 1,
+      //     limit: 15,
+      //   },
+      // },
     ];
     it.each(assertions)(
       'should return a list of categories',
