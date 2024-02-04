@@ -4,6 +4,10 @@ import { CastMemberRepository } from '../../../../domain/cast-member.repository'
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
 import { ListCastMembersUseCase } from '../list-cast-members.use-case';
 import { CastMemberOutputMapper } from '../../shared/cast-member-output';
+import {
+  CAST_MEMBER_TYPES,
+  CastMemberType,
+} from '../../../../domain/cast-member-type.vo';
 
 describe('ListCastMembersUseCase Unit Tests', () => {
   let useCase: ListCastMembersUseCase;
@@ -12,6 +16,12 @@ describe('ListCastMembersUseCase Unit Tests', () => {
     .someCastMembers(5)
     .withName((i) => `CastMember ${i % 2 === 0 ? 'A' : 'B'}`)
     .withCreatedAt((i) => new Date(new Date().getTime() + i * 1000))
+    .withType(
+      (i) =>
+        new CastMemberType(
+          i % 2 === 0 ? CAST_MEMBER_TYPES.ACTOR : CAST_MEMBER_TYPES.DIRECTOR,
+        ),
+    )
     .build();
 
   beforeEach(async () => {
@@ -99,7 +109,42 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       },
       {
         given: {
-          filter: 'CastMember B',
+          filter: {
+            name: 'CastMember B',
+          },
+        },
+        expected: {
+          items: [castMembers[3], castMembers[1]].map((c) =>
+            CastMemberOutputMapper.toDTO(c!),
+          ),
+          total: 2,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
+      {
+        given: {
+          filter: {
+            name: 'CastMember B',
+          },
+        },
+        expected: {
+          items: [castMembers[3], castMembers[1]].map((c) =>
+            CastMemberOutputMapper.toDTO(c!),
+          ),
+          total: 2,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
+      {
+        given: {
+          filter: {
+            name: 'CastMember B',
+            type: new CastMemberType(CAST_MEMBER_TYPES.DIRECTOR),
+          },
         },
         expected: {
           items: [castMembers[3], castMembers[1]].map((c) =>

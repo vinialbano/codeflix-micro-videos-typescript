@@ -125,7 +125,7 @@ export class SearchParams<
     this._filter =
       filter === null || filter === undefined || (filter as unknown) === ''
         ? null
-        : (`${filter}` as Filter);
+        : (filter as Filter);
   }
 
   protected validate(): void {}

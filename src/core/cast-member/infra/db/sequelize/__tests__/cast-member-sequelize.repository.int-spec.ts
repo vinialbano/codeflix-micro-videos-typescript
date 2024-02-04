@@ -11,7 +11,10 @@ import {
   CastMemberSearchResult,
 } from '../../../../domain/cast-member.repository';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
-import { CastMemberType } from '../../../../domain/cast-member-type.vo';
+import {
+  CAST_MEMBER_TYPES,
+  CastMemberType,
+} from '../../../../domain/cast-member-type.vo';
 
 describe('CastMemberSequelizeRepository Integration Tests', () => {
   setupSequelize({
@@ -168,6 +171,14 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
           .withCreatedAt(
             (i) => new Date(new Date().getTime() + 5000 - i * 1000),
           )
+          .withType(
+            (i) =>
+              new CastMemberType(
+                i % 2 === 0
+                  ? CAST_MEMBER_TYPES.ACTOR
+                  : CAST_MEMBER_TYPES.DIRECTOR,
+              ),
+          )
           .build(),
       ];
       await CastMemberModel.bulkCreate(castMembers.map((c) => c.toJSON()));
@@ -176,21 +187,21 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
         new CastMemberSearchParams({
           page: 1,
           limit: 2,
-          filter: 'CastMember',
+          filter: {
+            name: 'CastMember',
+            type: new CastMemberType(CAST_MEMBER_TYPES.DIRECTOR),
+          },
         }),
       );
       expect(searchOutput).toBeInstanceOf(CastMemberSearchResult);
       expect(searchOutput.toJSON()).toMatchObject({
-        total: 3,
+        total: 1,
         currentPage: 1,
-        lastPage: 2,
+        lastPage: 1,
         limit: 2,
       });
-      expect(searchOutput.items.length).toBe(2);
+      expect(searchOutput.items.length).toBe(1);
       expect(searchOutput.items[0]!.toJSON()).toMatchObject(
-        castMembers[2]!.toJSON(),
-      );
-      expect(searchOutput.items[1]!.toJSON()).toMatchObject(
         castMembers[3]!.toJSON(),
       );
     });
@@ -313,7 +324,9 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
         new CastMemberSearchParams({
           page: 1,
           limit: 2,
-          filter: 'CastMember',
+          filter: {
+            name: 'CastMember',
+          },
           sortCriteria: { field: 'name', direction: 'desc' },
         }),
       );
@@ -353,7 +366,9 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
         new CastMemberSearchParams({
           page: 1,
           limit: 3,
-          filter: 'CastMember',
+          filter: {
+            name: 'CastMember',
+          },
           sortCriteria: [
             { field: 'name', direction: 'desc' },
             { field: 'createdAt', direction: 'desc' },

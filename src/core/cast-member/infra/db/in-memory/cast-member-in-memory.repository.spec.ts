@@ -27,7 +27,50 @@ describe('CastMemberInMemoryRepository', () => {
         .someCastMembers(3)
         .withName((i) => `Name ${i + 1}`)
         .build();
-      const filteredItems = await repository['applyFilter'](items, '2');
+      const filteredItems = await repository['applyFilter'](items, {
+        name: '2',
+      });
+      expect(filteredItems).toEqual([items[1]]);
+    });
+
+    it('should return filtered items by type', async () => {
+      const repository = new CastMemberInMemoryRepository();
+      const items = CastMember.fake()
+        .someCastMembers(3)
+        .withName((i) => `Name ${i + 1}`)
+        .withType(
+          (i) =>
+            new CastMemberType(
+              i % 2 === 0
+                ? CAST_MEMBER_TYPES.ACTOR
+                : CAST_MEMBER_TYPES.DIRECTOR,
+            ),
+        )
+        .build();
+      const filteredItems = await repository['applyFilter'](items, {
+        type: new CastMemberType(CAST_MEMBER_TYPES.DIRECTOR),
+      });
+      expect(filteredItems).toEqual([items[1]]);
+    });
+
+    it('should return filtered items by type and name', async () => {
+      const repository = new CastMemberInMemoryRepository();
+      const items = CastMember.fake()
+        .someCastMembers(3)
+        .withName((i) => `Name ${i + 1}`)
+        .withType(
+          (i) =>
+            new CastMemberType(
+              i % 2 === 0
+                ? CAST_MEMBER_TYPES.ACTOR
+                : CAST_MEMBER_TYPES.DIRECTOR,
+            ),
+        )
+        .build();
+      const filteredItems = await repository['applyFilter'](items, {
+        name: '2',
+        type: new CastMemberType(CAST_MEMBER_TYPES.DIRECTOR),
+      });
       expect(filteredItems).toEqual([items[1]]);
     });
   });

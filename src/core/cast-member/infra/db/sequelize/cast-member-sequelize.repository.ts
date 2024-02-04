@@ -88,7 +88,12 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
     const { rows: models, count } = await this.castMemberModel.findAndCountAll({
       ...(props.filter && {
         where: {
-          name: { [Op.like]: `%${props.filter}%` },
+          ...('name' in props.filter && {
+            name: { [Op.like]: `%${props.filter.name}%` },
+          }),
+          ...('type' in props.filter && {
+            type: { [Op.eq]: props.filter.type.type },
+          }),
         },
       }),
       ...(sortCriteria.length

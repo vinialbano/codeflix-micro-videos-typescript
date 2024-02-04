@@ -33,7 +33,7 @@ describe('CastMemberModel Integration Tests', () => {
     expect(attributesMap.type).toMatchObject({
       field: 'type',
       fieldName: 'type',
-      allowNull: true,
+      allowNull: false,
       type: DataType.TINYINT(),
     });
     expect(attributesMap.createdAt).toMatchObject({

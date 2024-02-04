@@ -119,10 +119,10 @@ describe('SearchParams Unit Tests', () => {
       { given: null, expected: null },
       { given: '', expected: null },
       { given: 'filter', expected: 'filter' },
-      { given: 1, expected: '1' },
-      { given: 1.1, expected: '1.1' },
-      { given: true, expected: 'true' },
-      { given: false, expected: 'false' },
+      { given: 1, expected: 1 },
+      { given: 1.1, expected: 1.1 },
+      { given: true, expected: true },
+      { given: false, expected: false },
     ];
     it.each(filterTestCases)(
       'should create a SearchParams instance with filter = $expected, given $given',
