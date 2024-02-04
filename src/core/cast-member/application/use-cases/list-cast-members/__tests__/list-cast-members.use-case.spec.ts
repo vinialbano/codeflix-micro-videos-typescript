@@ -10,7 +10,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
   let castMemberRepository: CastMemberRepository;
   const castMembers = CastMember.fake()
     .someCastMembers(5)
-    .withName((i) => `CastMember ${i % 2 === 0 ? 'A' : 'B'}${i}`)
+    .withName((i) => `CastMember ${i % 2 === 0 ? 'A' : 'B'}`)
     .withCreatedAt((i) => new Date(new Date().getTime() + i * 1000))
     .build();
 
@@ -51,8 +51,37 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       },
       {
         given: {
-          sort: 'name',
-          sortDirection: 'desc' as SortDirection,
+          sortCriteria: {
+            field: 'name' as keyof CastMember,
+            direction: 'desc' as SortDirection,
+          },
+        },
+        expected: {
+          items: [
+            castMembers[1],
+            castMembers[3],
+            castMembers[0],
+            castMembers[2],
+            castMembers[4],
+          ].map((c) => CastMemberOutputMapper.toDTO(c!)),
+          total: 5,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
+      {
+        given: {
+          sortCriteria: [
+            {
+              field: 'name' as keyof CastMember,
+              direction: 'desc' as SortDirection,
+            },
+            {
+              field: 'createdAt' as keyof CastMember,
+              direction: 'desc' as SortDirection,
+            },
+          ],
         },
         expected: {
           items: [

@@ -149,7 +149,13 @@ describe('CategoriesController', () => {
         filter: 'test',
       };
       const presenter = await controller.search(searchParams);
-      expect(mockListUseCase.execute).toHaveBeenCalledWith(searchParams);
+      expect(mockListUseCase.execute).toHaveBeenCalledWith({
+        page: 1,
+        limit: 2,
+        offset: 1,
+        sortCriteria: { field: 'name', direction: 'desc' as SortDirection },
+        filter: 'test',
+      });
       expect(presenter).toBeInstanceOf(CategoryCollectionPresenter);
       expect(presenter).toStrictEqual(new CategoryCollectionPresenter(output));
     });

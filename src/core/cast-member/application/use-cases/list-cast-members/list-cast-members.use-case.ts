@@ -4,7 +4,7 @@ import {
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
 import { UseCase } from '../../../../shared/application/use-case';
-import { SortDirection } from '../../../../shared/domain/repository/search-params';
+import { SortCriterion } from '../../../../shared/domain/repository/search-params';
 
 import {
   CastMemberFilter,
@@ -27,12 +27,7 @@ export class ListCastMembersUseCase
       ...(input.page && { page: input.page }),
       ...(input.limit && { limit: input.limit }),
       ...(input.filter && { filter: input.filter }),
-      ...(input.sort && {
-        sortCriteria: {
-          field: input.sort as keyof CastMember,
-          ...(input.sortDirection && { direction: input.sortDirection }),
-        },
-      }),
+      ...(input.sortCriteria && { sortCriteria: input.sortCriteria }),
     });
     const searchResult = await this.castMemberRepository.search(params);
     return this.toOutput(searchResult);
@@ -49,8 +44,7 @@ export class ListCastMembersUseCase
 export type ListCastMembersInput = {
   page?: number;
   limit?: number;
-  sort?: string | null;
-  sortDirection?: SortDirection | null;
+  sortCriteria?: SortCriterion<CastMember> | SortCriterion<CastMember>[];
   filter?: CastMemberFilter | null;
 };
 

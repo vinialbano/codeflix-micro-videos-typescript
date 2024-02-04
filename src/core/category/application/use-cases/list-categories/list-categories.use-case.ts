@@ -1,10 +1,10 @@
-import { Category } from '@core/category/domain/category.aggregate';
+import { Category } from '../../../domain/category.aggregate';
 import {
   PaginationOutput,
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
 import { UseCase } from '../../../../shared/application/use-case';
-import { SortDirection } from '../../../../shared/domain/repository/search-params';
+import { SortCriterion } from '../../../../shared/domain/repository/search-params';
 
 import {
   CategoryFilter,
@@ -27,12 +27,7 @@ export class ListCategoriesUseCase
       ...(input.page && { page: input.page }),
       ...(input.limit && { limit: input.limit }),
       ...(input.filter && { filter: input.filter }),
-      ...(input.sort && {
-        sortCriteria: {
-          field: input.sort as keyof Category,
-          ...(input.sortDirection && { direction: input.sortDirection }),
-        },
-      }),
+      ...(input.sortCriteria && { sortCriteria: input.sortCriteria }),
     });
     const searchResult = await this.categoryRepository.search(params);
     return this.toOutput(searchResult);
@@ -47,8 +42,7 @@ export class ListCategoriesUseCase
 export type ListCategoriesInput = {
   page?: number;
   limit?: number;
-  sort?: string | null;
-  sortDirection?: SortDirection | null;
+  sortCriteria?: SortCriterion<Category> | SortCriterion<Category>[];
   filter?: CategoryFilter | null;
 };
 

@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '../../config-module/config.module';
 import { DatabaseModule } from '../../database-module/database.module';
 import { CategoriesModule } from '../categories.module';
-import { CreateCategoryUseCase } from '@core/category/application/use-cases/create-category/create-category.use-case';
 import { UpdateCategoryUseCase } from '@core/category/application/use-cases/update-category/update-category.use-case';
 import { DeleteCategoryUseCase } from '@core/category/application/use-cases/delete-category/delete-category.use-case';
 import { GetCategoryUseCase } from '@core/category/application/use-cases/get-category/get-category.use-case';
@@ -20,6 +19,7 @@ import {
   CategoryPresenter,
 } from '../categories.presenter';
 import { Category, CategoryId } from '@core/category/domain/category.aggregate';
+import { CreateCategoryUseCase } from '@core/category/application/use-cases/create-category/create-category.use-case';
 
 describe('CategoriesController Integration Tests', () => {
   let controller: CategoriesController;

@@ -10,7 +10,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
   let categoryRepository: CategoryRepository;
   const categories = Category.fake()
     .someCategories(5)
-    .withName((i) => `Category ${i % 2 === 0 ? 'A' : 'B'}${i}`)
+    .withName((i) => `Category ${i % 2 === 0 ? 'A' : 'B'}`)
     .withCreatedAt((i) => new Date(new Date().getTime() + i * 1000))
     .build();
 
@@ -34,54 +34,83 @@ describe('ListCategoriesUseCase Unit Tests', () => {
           limit: 15,
         },
       },
-      // {
-      //   given: {
-      //     page: 2,
-      //     limit: 2,
-      //   },
-      //   expected: {
-      //     items: [categories[2], categories[1]].map((c) =>
-      //       CategoryOutputMapper.toDTO(c!),
-      //     ),
-      //     total: 5,
-      //     currentPage: 2,
-      //     lastPage: 3,
-      //     limit: 2,
-      //   },
-      // },
-      // {
-      //   given: {
-      //     sort: 'name',
-      //     sortDirection: 'desc' as SortDirection,
-      //   },
-      //   expected: {
-      //     items: [
-      //       categories[3],
-      //       categories[1],
-      //       categories[4],
-      //       categories[2],
-      //       categories[0],
-      //     ].map((c) => CategoryOutputMapper.toDTO(c!)),
-      //     total: 5,
-      //     currentPage: 1,
-      //     lastPage: 1,
-      //     limit: 15,
-      //   },
-      // },
-      // {
-      //   given: {
-      //     filter: 'B',
-      //   },
-      //   expected: {
-      //     items: [categories[3], categories[1]].map((c) =>
-      //       CategoryOutputMapper.toDTO(c!),
-      //     ),
-      //     total: 2,
-      //     currentPage: 1,
-      //     lastPage: 1,
-      //     limit: 15,
-      //   },
-      // },
+      {
+        given: {
+          page: 2,
+          limit: 2,
+        },
+        expected: {
+          items: [categories[2], categories[1]].map((c) =>
+            CategoryOutputMapper.toDTO(c!),
+          ),
+          total: 5,
+          currentPage: 2,
+          lastPage: 3,
+          limit: 2,
+        },
+      },
+      {
+        given: {
+          sortCriteria: {
+            field: 'name' as keyof Category,
+            direction: 'desc' as SortDirection,
+          },
+        },
+        expected: {
+          items: [
+            categories[1],
+            categories[3],
+            categories[0],
+            categories[2],
+            categories[4],
+          ].map((c) => CategoryOutputMapper.toDTO(c!)),
+          total: 5,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
+      {
+        given: {
+          sortCriteria: [
+            {
+              field: 'name' as keyof Category,
+              direction: 'desc' as SortDirection,
+            },
+            {
+              field: 'createdAt' as keyof Category,
+              direction: 'desc' as SortDirection,
+            },
+          ],
+        },
+        expected: {
+          items: [
+            categories[3],
+            categories[1],
+            categories[4],
+            categories[2],
+            categories[0],
+          ].map((c) => CategoryOutputMapper.toDTO(c!)),
+          total: 5,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
+      {
+        given: {
+          filter: 'B',
+        },
+        expected: {
+          items: [categories[3], categories[1]].map((c) =>
+            CategoryOutputMapper.toDTO(c!),
+          ),
+          total: 2,
+          currentPage: 1,
+          lastPage: 1,
+          limit: 15,
+        },
+      },
     ];
     it.each(assertions)(
       'should return a list of categories',

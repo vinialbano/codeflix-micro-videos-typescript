@@ -22,7 +22,7 @@ export class CastMemberModel extends Model<CastMemberModelProps> {
   @Column({ type: DataType.STRING(255), allowNull: false })
   declare name: string;
 
-  @Column({ type: DataType.TINYINT, allowNull: true })
+  @Column({ type: DataType.TINYINT, allowNull: false })
   declare type: number;
 
   @Column({ type: DataType.DATE(3), allowNull: false })

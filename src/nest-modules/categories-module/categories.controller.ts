@@ -27,7 +27,7 @@ import {
 } from './categories.presenter';
 import { CategoryOutput } from '@core/category/application/use-cases/shared/category-output';
 import { SearchCategoriesDto } from './dto/search-categories.dto';
-
+import { includeIfDefined } from '@core/shared/utils';
 @Controller('categories')
 export class CategoriesController {
   @Inject(CreateCategoryUseCase)
@@ -53,7 +53,22 @@ export class CategoriesController {
 
   @Get()
   async search(@Query() searchCategoriesDto: SearchCategoriesDto) {
-    const output = await this.listUseCase.execute(searchCategoriesDto);
+    const input = {
+      ...includeIfDefined(searchCategoriesDto.page, 'page'),
+      ...includeIfDefined(searchCategoriesDto.limit, 'limit'),
+      ...includeIfDefined(searchCategoriesDto.offset, 'offset'),
+      ...includeIfDefined(searchCategoriesDto.filter, 'filter'),
+      ...(searchCategoriesDto.sort && {
+        sortCriteria: {
+          field: searchCategoriesDto.sort as any,
+          ...(searchCategoriesDto.sortDirection && {
+            direction: searchCategoriesDto.sortDirection,
+          }),
+        },
+      }),
+    };
+
+    const output = await this.listUseCase.execute(input);
     return CategoriesController.serializeCollection(output);
   }
 
