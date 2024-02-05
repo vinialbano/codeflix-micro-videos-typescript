@@ -1,13 +1,10 @@
-import { CastMember } from '../../../domain/cast-member.aggregate';
 import {
   PaginationOutput,
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
 import { UseCase } from '../../../../shared/application/use-case';
-import { SortCriterion } from '../../../../shared/domain/repository/search-params';
 
 import {
-  CastMemberFilter,
   CastMemberRepository,
   CastMemberSearchParams,
   CastMemberSearchResult,
@@ -16,6 +13,7 @@ import {
   CastMemberOutput,
   CastMemberOutputMapper,
 } from '../shared/cast-member-output';
+import { ListCastMembersInput } from './list-cast-members.input';
 
 export class ListCastMembersUseCase
   implements UseCase<ListCastMembersInput, ListCastMembersOutput>
@@ -40,12 +38,5 @@ export class ListCastMembersUseCase
     return PaginationOutputMapper.toDTO(items, searchResult);
   }
 }
-
-export type ListCastMembersInput = {
-  page?: number;
-  limit?: number;
-  sortCriteria?: SortCriterion<CastMember> | SortCriterion<CastMember>[];
-  filter?: CastMemberFilter | null;
-};
 
 export type ListCastMembersOutput = PaginationOutput<CastMemberOutput>;

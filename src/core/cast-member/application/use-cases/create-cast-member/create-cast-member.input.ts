@@ -1,11 +1,4 @@
-import { CAST_MEMBER_TYPES } from '@core/cast-member/domain/cast-member-type.vo';
-import {
-  IsIn,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  validateSync,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, validateSync } from 'class-validator';
 
 type CreateCastMemberInputProps = {
   name: string;
@@ -17,8 +10,8 @@ export class CreateCastMemberInput {
   @IsNotEmpty()
   name!: string;
 
-  @IsIn([CAST_MEMBER_TYPES.ACTOR, CAST_MEMBER_TYPES.DIRECTOR])
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
   type!: number;
 
   constructor(props: CreateCastMemberInputProps) {
